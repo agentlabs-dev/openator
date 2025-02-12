@@ -87,6 +87,8 @@ export class ManagerAgentPrompt {
      - Handle popups/cookies by accepting or closing them.
      - Use scrollDown and scrollUp to find elements you are looking for. Often, when filling a form, you need to scroll down to find the next element such as a submit button or next input fields.
      - Use the current URL to know where you are and to know if you need to navigate to a different page or to scroll to a different section of the page.
+     - IMPORTANT: if you have a hint you should follow it. However, you must absolutely avoid repeating the same operationg over and over again. For example, do not open the same product, then fail, then open the same product again, then fail again...
+     - IMPORTANT: when you receieve a hint, try different things. As Einstein said: "Insanity is doing the same thing, over and over again, but expecting different results."
   
   5. TASK COMPLETION:
      - When you evaluate the task, you shouls always ask yourself if the Success condition given by the user is met. If it is, use the triggerSuccess action as the last action.
@@ -102,6 +104,8 @@ export class ManagerAgentPrompt {
      - Most often the label is inside the bounding box, on the top right.
      - Visual context helps verify element locations and relationships.
      - Sometimes labels overlap, so use the context to verify the correct element.
+     - If you are asked information about a product or an item, make sure to open it if possible before providing the information because sometimes summaries can be misleading.
+     - Sometimes it's easier to extract the information from the content of the page (especially when you are dealing with a list of products). To do this, use the extractContent action.
   
   7. FORM FILLING:
      - If you fill an input field and your action sequence is interrupted, most often a list with suggestions popped up under the field and you need to first select the right element from the suggestion list.
@@ -122,6 +126,8 @@ export class ManagerAgentPrompt {
       - You should always provide a result in the triggerResult action.
       - The result should be a string that describes the result of the task and matches the user's goal or question.
       - DO NOT hallucinate the result.
+      - Your result should ALWAYS be based on what you see and not on what you think you know.
+      - When you will trigger the result, pay attention to the feedback you will receive. This feedback will contain the reason why the task failed and the hint to fix it. It is paramount to you to follow the hint.
   
       Use a maximum of ${this.maxActionPerStep} actions per task.
   `;
@@ -130,15 +136,20 @@ export class ManagerAgentPrompt {
   inputFormat() {
     return `
       INPUT STRUCTURE:
-      1. CURRENT URL: The webpage you're currently on.
-      2. EXTRACTED DOM ELEMENTS: List in the format:
+      1. MEMORY LEARNINGS: A list of memory learning you should know about your previous actions. This will prevent you from doing the same mistakes over and over again.
+      2. CURRENT URL: The webpage you're currently on.
+      3. EXTRACTED DOM ELEMENTS: List in the format:
         [index]__<element_type attributes=value>element_text</element_type>
         - index: Numeric identifier for interaction (if empty, the element is non-interactive).
         - element_type: HTML element type (button, input, select, etc.).
         - element_text: Visible text or element description.
         - attributes: HTML attributes of the element used for context.
         
-      3. TASK: The task asked by the user. Use it to define the actions you have to perform. No failure is tolerated and success is rewarded.
+      4. TASK: The task asked by the user. 
+        - Use it to define the actions you have to perform.
+        - No failure is tolerated and success is rewarded.
+        - You must be sure of the data you provide. Make sure to provide the exact data. Open products and navigate until you find the information you need.
+        - It's better to navigate a bit more than to provide wrong information.
   
       Notes:
       - Only elements with numeric indexes are interactive.
@@ -177,6 +188,8 @@ export class ManagerAgentPrompt {
       - scrollUp: { goal: <goal> }
       - goToUrl: { url: <url> }    
       - triggerResult: { data: <data> }
+      - goBack: {}
+      - extractContent: {}
   
       Remember: Your responses must be valid JSON matching the specified format. Each action in the sequence must be valid."""
   `;
@@ -193,6 +206,7 @@ export class ManagerAgentHumanPrompt {
   constructor() {}
 
   getHumanMessage({
+    memoryLearnings,
     serializedTasks,
     stringifiedDomState,
     screenshotUrl,
@@ -202,6 +216,7 @@ export class ManagerAgentHumanPrompt {
     pixelAbove,
     pixelBelow,
   }: {
+    memoryLearnings: string;
     serializedTasks: string;
     stringifiedDomState: string;
     screenshotUrl: string;
@@ -229,6 +244,8 @@ export class ManagerAgentHumanPrompt {
         {
           type: 'text',
           text: `
+          MEMORY LEARNINGS: ${memoryLearnings}
+
           CURRENT URL: ${pageUrl}
 
           ... ${pixelAbove} PIXEL ABOVE - SCROLL UP TO SEE MORE ELEMENTS

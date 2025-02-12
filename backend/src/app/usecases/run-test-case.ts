@@ -12,6 +12,7 @@ import {
 import { OraReporter } from '@/infra/services/ora-reporter';
 import { Variable } from '@/core/entities/variable';
 import { EventBus } from '@/core/services/realtime-reporter';
+import { FeedbackAgent } from '@/core/agents/feedback-agent/feedback-agent';
 
 export class RunTestCase {
   async execute(startUrl: string, initialPrompt: string, eventBus: EventBus) {
@@ -34,8 +35,9 @@ export class RunTestCase {
           isSecret: true,
         }),
       ],
+      feedbackAgent: new FeedbackAgent(llm),
       taskManager: new TaskManagerService(),
-      domService: new DomService(screenshotService, browser),
+      domService: new DomService(screenshotService, browser, eventBus),
       browserService: browser,
       llmService: llm,
       reporter: new OraReporter('Manager Agent'),

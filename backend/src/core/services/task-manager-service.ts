@@ -1,4 +1,4 @@
-import { Task } from "@/core/entities/task";
+import { Task } from '@/core/entities/task';
 
 export class TaskManagerService {
   private tasks: Task[] = [];
@@ -27,9 +27,11 @@ export class TaskManagerService {
   }
 
   getSerializedTasks() {
+    console.log('this.tasks', JSON.stringify(this.tasks, null, 2));
+
     return JSON.stringify({
       endGoal: this.endGoal,
-      latestTaskCompleted: this.getLatestTask()?.asObject(),
+      taskHistory: JSON.stringify(this.tasks),
     });
   }
 }

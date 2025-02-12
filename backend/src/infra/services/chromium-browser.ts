@@ -1,5 +1,7 @@
 import { VariableString } from '@/core/entities/variable-string';
 import { Browser } from '@/core/interfaces/browser.interface';
+import { Readability } from '@mozilla/readability';
+import { JSDOM } from 'jsdom';
 import {
   Browser as PBrowser,
   BrowserContext,
@@ -16,7 +18,7 @@ export class ChromiumBrowser implements Browser {
   private page: Page | null = null;
   private context: BrowserContext | null = null;
 
-  private minimumPageLoadTime: number = 600;
+  private minimumPageLoadTime: number = 400;
 
   constructor() {}
 
@@ -40,12 +42,12 @@ export class ChromiumBrowser implements Browser {
 
     this.context = await browser.newContext({
       screen: {
-        width: 1920,
-        height: 1080,
+        width: 1440,
+        height: 900,
       },
       viewport: {
-        width: 1900,
-        height: 1040,
+        width: 1440,
+        height: 900,
       },
     });
     this.page = await this.context.newPage();
@@ -109,6 +111,8 @@ export class ChromiumBrowser implements Browser {
 
   async fillInput(text: VariableString, coordinates: Coordinates) {
     await this.getPage().mouse.click(coordinates.x, coordinates.y);
+    await this.getPage().keyboard.press('Control+A');
+    await this.getPage().keyboard.press('Backspace');
     await this.getPage().keyboard.type(text.dangerousValue(), { delay: 100 });
   }
 
@@ -124,5 +128,17 @@ export class ChromiumBrowser implements Browser {
 
   async goToUrl(url: string) {
     await this.getPage().goto(url);
+  }
+
+  async goBack() {
+    await this.getPage().goBack();
+  }
+
+  async extractContent() {
+    const html = await this.getPage().content();
+    const dom = new JSDOM(html);
+    const reader = new Readability(dom.window.document);
+    const content = reader.parse();
+    return content.textContent;
   }
 }

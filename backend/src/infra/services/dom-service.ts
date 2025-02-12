@@ -2,6 +2,7 @@ import { Page } from 'playwright';
 import { Browser } from '@/core/interfaces/browser.interface';
 import { Screenshotter } from '@/core/interfaces/screenshotter.interface';
 import * as crypto from 'crypto';
+import { EventBus } from '@/core/services/realtime-reporter';
 
 declare global {
   interface Window {
@@ -84,6 +85,7 @@ export class DomService {
   constructor(
     private readonly screenshotService: Screenshotter,
     private readonly browserService: Browser,
+    private readonly eventBus: EventBus,
   ) {}
 
   /**
@@ -151,6 +153,9 @@ export class DomService {
     const pristineScreenshot = await this.screenshotService.takeScreenshot(
       await this.browserService.getStablePage(),
     );
+
+    this.eventBus.emit('pristine-screenshot:taken', pristineScreenshot);
+
     const state = await this.highlightForSoM(withHighlight);
 
     const screenshot = await this.screenshotService.takeScreenshot(

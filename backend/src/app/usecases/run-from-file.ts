@@ -14,6 +14,10 @@ import { OraReporter } from '@/infra/services/ora-reporter';
 import * as fs from 'fs/promises';
 import { Variable } from '@/core/entities/variable';
 import { EventBus } from '@/core/services/realtime-reporter';
+import { PersistResultService, TaskResult } from '../services/persist-result';
+import { EvaluationAgent } from '@/core/agents/evaluation-agent/evaluation-agent';
+import { LocalFileSystem } from '@/infra/services/local-file-system';
+import { FeedbackAgent } from '@/core/agents/feedback-agent/feedback-agent';
 
 interface TaskCase {
   web: string;
@@ -76,6 +80,26 @@ export class RunFromFile {
 
       const llm = new OpenAI4o();
 
+      const eventBus = new EventBus();
+
+      const localFileSystem = new LocalFileSystem();
+
+      const screenshotUrls: string[] = [];
+      eventBus.on(
+        'pristine-screenshot:taken',
+        async (screenshotData: string) => {
+          const buffer = localFileSystem.bufferFromStringUrl(screenshotData);
+          const screenshotFileName = `screenshot_${webName}_${taskId}_${Date.now()}.png`;
+          await localFileSystem.saveScreenshot(screenshotFileName, buffer);
+
+          screenshotUrls.push(screenshotData);
+        },
+      );
+
+      const feedbackAgent = new FeedbackAgent(llm);
+
+      const startTime = new Date();
+
       const managerAgent = new ManagerAgent({
         variables: context.variables.map(
           (variable) =>
@@ -87,8 +111,9 @@ export class RunFromFile {
         ),
         reporter: new OraReporter('Manager Agent'),
         taskManager: new TaskManagerService(),
-        domService: new DomService(screenshotService, browser),
+        domService: new DomService(screenshotService, browser, eventBus),
         browserService: browser,
+        feedbackAgent,
         llmService: llm,
         maxActionsPerTask: DEFAULT_AGENT_MAX_ACTIONS_PER_TASK,
         maxRetries: DEFAULT_AGENT_MAX_RETRIES,
@@ -96,8 +121,33 @@ export class RunFromFile {
       });
 
       const result = await managerAgent.launch(startUrl, userStory);
+      const endTime = new Date();
+      const durationSeconds = (endTime.getTime() - startTime.getTime()) / 1000;
 
-      console.log('RESULT', result);
+      const evalResult = await new EvaluationAgent(llm).evaluate({
+        screenshotUrls,
+        task: userStory,
+        answer: result.reason,
+      });
+
+      const taskResult: TaskResult = {
+        web_name: webName,
+        task_id: taskId,
+        task_prompt: userStory,
+        web: startUrl,
+        result: result.status,
+        start_time: startTime,
+        end_time: endTime,
+        duration_seconds: durationSeconds,
+        eval_result: evalResult.result,
+        eval_reason: evalResult.explanation,
+      };
+
+      const persistResultService = new PersistResultService(
+        '/tmp/results.json',
+      );
+
+      persistResultService.storeResult(taskResult);
 
       results.push({
         success: result.status === 'passed',

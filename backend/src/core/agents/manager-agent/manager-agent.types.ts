@@ -4,6 +4,15 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 export const ManagerAgentActionSchema = z
   .union([
     z.object({
+      name: z.literal('extractContent'),
+      params: z.null(),
+      description: z
+        .string()
+        .describe(
+          "A short description of the action you want to perform. E.g 'Extract the content of the current page'",
+        ),
+    }),
+    z.object({
       name: z.literal('clickElement'),
       params: z.object({
         index: z.number(),
@@ -25,6 +34,15 @@ export const ManagerAgentActionSchema = z
         .describe(
           "A short description of the action you want to perform. E.g 'Fill the email input'",
         ),
+    }),
+    z.object({
+      name: z.literal('goBack'),
+      description: z
+        .string()
+        .describe(
+          "A short description of the action you want to perform. E.g 'Go back to the previous page'",
+        ),
+      params: z.null(),
     }),
     z.object({
       name: z.literal('scrollDown'),

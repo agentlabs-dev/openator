@@ -19,4 +19,6 @@ export interface Browser {
   scrollDown(): Promise<void>;
   scrollUp(): Promise<void>;
   goToUrl(url: string): Promise<void>;
+  goBack(): Promise<void>;
+  extractContent(): Promise<string>;
 }

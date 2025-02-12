@@ -5,6 +5,7 @@ export type AppEvents = {
   'run:update': Run;
   'task:update': Task;
   'action:update': TaskAction;
+  'pristine-screenshot:taken': string;
 };
 
 export interface EventBusInterface {

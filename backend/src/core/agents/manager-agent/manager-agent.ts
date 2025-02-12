@@ -19,6 +19,7 @@ import { Variable } from '@/core/entities/variable';
 import { VariableString } from '@/core/entities/variable-string';
 import { Run } from '@/core/entities/run';
 import { EventBusInterface } from '@/core/interfaces/event-bus.interface';
+import { FeedbackAgent } from '../feedback-agent/feedback-agent';
 
 export type ManagerAgentConfig = {
   maxActionsPerTask?: number;
@@ -27,6 +28,7 @@ export type ManagerAgentConfig = {
 
   taskManager: TaskManagerService;
   domService: DomService;
+  feedbackAgent: FeedbackAgent;
   browserService: Browser;
   llmService: LLM;
   reporter: AgentReporter;
@@ -41,6 +43,7 @@ export class ManagerAgent {
   private reason: string = '';
   private result: string = '';
   private retries: number = 0;
+  private feedbackRetries: number = 0;
   private readonly variables: Variable[];
   private currentRun: Run | null = null;
 
@@ -53,6 +56,8 @@ export class ManagerAgent {
   private readonly llmService: LLM;
   private readonly reporter: AgentReporter;
   private readonly eventBus: EventBusInterface;
+  private readonly feedbackAgent: FeedbackAgent;
+  private readonly memoryLearnings: string[] = [];
 
   constructor(config: ManagerAgentConfig) {
     this.taskManager = config.taskManager;
@@ -61,6 +66,8 @@ export class ManagerAgent {
     this.llmService = config.llmService;
     this.reporter = config.reporter;
     this.variables = config.variables;
+    this.feedbackAgent = config.feedbackAgent;
+    this.memoryLearnings = [];
 
     this.maxActionsPerTask =
       config.maxActionsPerTask ?? DEFAULT_AGENT_MAX_ACTIONS_PER_TASK;
@@ -86,6 +93,10 @@ export class ManagerAgent {
 
   private async afterAction(action: TaskAction) {
     this.reporter.success(`Performing action ${action.data.name}...`);
+  }
+
+  private async incrementFeedbackRetries() {
+    this.feedbackRetries += 1;
   }
 
   private async incrementRetries() {
@@ -175,7 +186,12 @@ export class ManagerAgent {
     });
   }
 
+  /**
+   * Checks if the DOM state has changed.
+   * TODO: fix this
+   */
   private async didDomStateChange() {
+    return false;
     const { domStateHash: currentDomStateHash } =
       await this.domService.getInteractiveElements(false);
 
@@ -218,7 +234,10 @@ export class ManagerAgent {
 
     this.lastDomStateHash = domStateHash;
 
+    console.log('-----this.memoryLearnings', this.memoryLearnings);
+
     const humanMessage = new ManagerAgentHumanPrompt().getHumanMessage({
+      memoryLearnings: this.memoryLearnings.join(' ; '),
       serializedTasks: this.taskManager.getSerializedTasks(),
       pristineScreenshotUrl: pristineScreenshot,
       screenshotUrl: screenshot,
@@ -380,8 +399,37 @@ export class ManagerAgent {
         await this.browserService.goToUrl(action.data.params.url);
         break;
 
+      case 'goBack':
+        await this.browserService.goBack();
+        break;
+
+      case 'extractContent':
+        const content = await this.browserService.extractContent();
+        console.log('content', content);
+        break;
+
       case 'triggerResult':
-        this.onSuccess(action.data.params.data);
+        const { pristineScreenshot } = await this.domService.getDomState();
+        const { result, explanation, hint, memoryLearning } =
+          await this.feedbackAgent.evaluate({
+            pageUrl: this.browserService.getPageUrl(),
+            screenshotUrls: [pristineScreenshot],
+            task: this.taskManager.getEndGoal(),
+            answer: action.data.params.data,
+          });
+
+        if (result === 'success') {
+          this.onSuccess(explanation);
+        } else {
+          if (this.feedbackRetries > this.maxRetries) {
+            return this.onFailure('Max feedback retries reached');
+          }
+
+          action.fail(JSON.stringify({ result, explanation, hint }));
+          this.memoryLearnings.push(memoryLearning);
+          this.incrementFeedbackRetries();
+        }
+
         break;
     }
 
