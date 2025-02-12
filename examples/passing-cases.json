@@ -1,0 +1,31 @@
+{
+    "context": {
+        "variables": [
+            {
+                "name": "main_url",
+                "value": "https://app.magicinspector.com/",
+                "is_secret": false
+            },
+            {
+                "name": "user_email",
+                "value": "demo@magicinspector.com",
+                "is_secret": false
+            },
+            {
+                "name": "user_password",
+                "value": "demopassword",
+                "is_secret": true
+            }
+        ]
+    },
+    "cases": [
+        {
+            "start_url": "{{main_url}}",
+            "user_story": "As a user authenticated with {{user_email}} and {{user_password}}, I can see the dashboard."
+        },
+        {
+            "start_url": "{{main_url}}",
+            "user_story": "As a user authenticated with {{user_email}} and {{user_password}}, I can create a new project and see it in the dashboard."
+        }
+    ]
+}

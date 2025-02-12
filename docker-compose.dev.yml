@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  playwright:
+    build:
+      context: ./playwright-server
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5900:5900"       # VNC port for remote display
+      - "6080:6080"       # noVNC Web UI
+      - "9222:9222"       # WebSocket endpoint for Playwright
+    hostname: playwright
+    environment:
+      - DISPLAY=:99
+    volumes:
+      - ./playwright-server:/app
+
+  backend:
+    depends_on:
+      - playwright
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    hostname: backend
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - PLAYWRIGHT_WS_ENDPOINT=ws://playwright:9222/ws-endpoint
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "80:3000"
+    hostname: frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
