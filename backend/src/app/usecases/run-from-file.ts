@@ -5,7 +5,7 @@ import { OpenAI4o } from '@/infra/services/openai4o';
 import { InMemoryFileSystem } from '@/infra/services/in-memory-file-system';
 import { PlaywrightScreenshoter } from '@/infra/services/playwright-screenshotter';
 import { ChromiumBrowser } from '@/infra/services/chromium-browser';
-import { EvaluationAgent } from '@/core/agents/evaluation-agent/evaluation-agent';
+
 import {
   DEFAULT_AGENT_MAX_ACTIONS_PER_TASK,
   DEFAULT_AGENT_MAX_RETRIES,
@@ -15,9 +15,11 @@ import * as fs from 'fs/promises';
 import { Variable } from '@/core/entities/variable';
 import { EventBus } from '@/core/services/realtime-reporter';
 
-interface TestCase {
-  start_url: string;
-  user_story: string;
+interface TaskCase {
+  web: string;
+  ques: string;
+  id: string;
+  web_name: string;
 }
 
 interface ParsedContent {
@@ -28,12 +30,12 @@ interface ParsedContent {
       is_secret: boolean;
     }[];
   };
-  cases: TestCase[];
+  tasks: TaskCase[];
 }
 
 export class RunFromFile {
   async execute(filePath: string) {
-    const results: { success: boolean; reason: string; case: TestCase }[] = [];
+    const results: { success: boolean; reason: string; case: TaskCase }[] = [];
 
     let fileContent: string;
 
@@ -54,11 +56,18 @@ export class RunFromFile {
 
     const context = parsedContent.context;
 
-    for (const [index, testCase] of parsedContent.cases.entries()) {
-      const { start_url: startUrl, user_story: userStory } = testCase;
+    for (const [index, testCase] of parsedContent.tasks.entries()) {
+      const {
+        web: startUrl,
+        ques: userStory,
+        web_name: webName,
+        id: taskId,
+      } = testCase;
 
       console.log('--------------------------------');
-      console.log(`TEST ${index + 1} of ${parsedContent.cases.length}`);
+      console.log(
+        `TEST ${index + 1} of ${parsedContent.tasks.length} - ${webName} - ${taskId}`,
+      );
       console.log('--------------------------------');
 
       const fileSystem = new InMemoryFileSystem();
@@ -66,13 +75,6 @@ export class RunFromFile {
       const browser = new ChromiumBrowser();
 
       const llm = new OpenAI4o();
-
-      const evaluationAgent = new EvaluationAgent(
-        llm,
-        browser,
-        screenshotService,
-        new OraReporter('Evaluation Agent'),
-      );
 
       const managerAgent = new ManagerAgent({
         variables: context.variables.map(
@@ -84,7 +86,6 @@ export class RunFromFile {
             }),
         ),
         reporter: new OraReporter('Manager Agent'),
-        evaluator: evaluationAgent,
         taskManager: new TaskManagerService(),
         domService: new DomService(screenshotService, browser),
         browserService: browser,
@@ -95,6 +96,8 @@ export class RunFromFile {
       });
 
       const result = await managerAgent.launch(startUrl, userStory);
+
+      console.log('RESULT', result);
 
       results.push({
         success: result.status === 'passed',

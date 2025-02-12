@@ -12,6 +12,8 @@ export interface Browser {
   getStablePage(): Promise<Page>;
   getPage(): Page;
   getPageUrl(): string;
+  getPixelAbove(): Promise<number>;
+  getPixelBelow(): Promise<number>;
   mouseClick(x: number, y: number): Promise<void>;
   fillInput(text: VariableString, coordinates: Coordinates): Promise<void>;
   scrollDown(): Promise<void>;

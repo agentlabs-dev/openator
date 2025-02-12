@@ -68,7 +68,10 @@ export const isTextNode = (node: DomNode): node is TextNode => {
 
 export interface SerializedDomState {
   screenshot: string;
+  pristineScreenshot: string;
   domState: DomNode | null;
+  pixelAbove: number;
+  pixelBelow: number;
 }
 
 export class DomService {
@@ -144,16 +147,31 @@ export class DomService {
   async getDomState(
     withHighlight: boolean = true,
   ): Promise<SerializedDomState> {
+    await this.resetHighlightElements();
+    const pristineScreenshot = await this.screenshotService.takeScreenshot(
+      await this.browserService.getStablePage(),
+    );
     const state = await this.highlightForSoM(withHighlight);
+
     const screenshot = await this.screenshotService.takeScreenshot(
       await this.browserService.getStablePage(),
     );
 
-    return { screenshot, domState: state };
+    const pixelAbove = await this.browserService.getPixelAbove();
+    const pixelBelow = await this.browserService.getPixelBelow();
+
+    return {
+      screenshot,
+      pristineScreenshot,
+      domState: state,
+      pixelAbove,
+      pixelBelow,
+    };
   }
 
   async getInteractiveElements(withHighlight: boolean = true) {
-    const { screenshot, domState } = await this.getDomState(withHighlight);
+    const { screenshot, pristineScreenshot, domState, pixelAbove, pixelBelow } =
+      await this.getDomState(withHighlight);
     const selectorMap = this.createSelectorMap(domState);
     const stringifiedDomState = this.stringifyDomState(domState);
     const domStateHash = this.hashDomState(domState);
@@ -162,10 +180,13 @@ export class DomService {
 
     return {
       screenshot,
+      pristineScreenshot,
       domState,
       selectorMap,
       stringifiedDomState,
       domStateHash,
+      pixelAbove,
+      pixelBelow,
     };
   }
 

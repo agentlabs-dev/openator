@@ -1,8 +1,8 @@
 import {
   JsonifiedManagerResponseSchema,
   ManagerResponseExamples,
-} from "@/core/agents/manager-agent/manager-agent.types";
-import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+} from '@/core/agents/manager-agent/manager-agent.types';
+import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 export class ManagerAgentPrompt {
   constructor(private readonly maxActionPerStep: number) {}
@@ -50,8 +50,7 @@ export class ManagerAgentPrompt {
       - NEVER plan to do something after a scroll action since the page will change.
       - NEVER plan to scroll down or up if there is a cookie popup or any constent popup on screen. First accept or close the popup.
       - When the page is truncated, scroll down to view more elements especially if you are filling a form.
-      - Trigger success means you have completed the task and we can ask the evaluator to evaluate the test result.
-      - Trigger failure means you have failed the task and you don't know how to complete the scenario.
+      - Trigger result means you have completed the task and we can ask the evaluator to evaluate the test result.
       - Sometimes, the user will provide variables surrounded by double brackets {{}}. You should keep them exactly as they are, we will replace them with the actual value later.
 
       Wrong example (trigger success among other actions):
@@ -60,7 +59,7 @@ export class ManagerAgentPrompt {
         { "name": "fillInput", "params": { "index": 1, "text": "{{user_email}}" } },
         { "name": "fillInput", "params": { "index": 2, "text": "{{user_password}}" } },
         { "name": "clickElement", "params": { "index": 2 } },
-        { "name": "triggerSuccess", "params": { "reason": "Form filled" } },
+        { "name": "triggerResult", "params": { "data": "" } },
       ]
 
       Correct example (trigger success alone):
@@ -74,7 +73,7 @@ export class ManagerAgentPrompt {
       [... later if you believe the task is completed ...]
 
       actions: [
-        { "name": "triggerSuccess", "params": { "reason": "Form filled" } },
+        { "name": "triggerResult", "params": { "data": "The recipe named 'Vegetarian Four Cheese Lasagna' has 4.6-star, 181 reviews, Servings 8, matches your request. It is available at https://www.allrecipes.com/recipe/123456/vegetarian-four-cheese-lasagna/" } },
       ]
 
   3. ELEMENT INTERACTION:
@@ -90,7 +89,7 @@ export class ManagerAgentPrompt {
      - Use the current URL to know where you are and to know if you need to navigate to a different page or to scroll to a different section of the page.
   
   5. TASK COMPLETION:
-     - When you evaluate the task, you shouls always ask yourself if the Success or Failure condition given by the user is met. If it is, use the triggerSuccess or triggerFailure action as the last action.
+     - When you evaluate the task, you shouls always ask yourself if the Success condition given by the user is met. If it is, use the triggerSuccess action as the last action.
      - If you tried several times the same task and it failed, use the triggerFailure action as the last action.
      - Don't hallucinate actions.
      - If the task requires specific information - make sure to include everything in the triggerSuccess or triggerFailure function. This is what the user will see.
@@ -117,6 +116,12 @@ export class ManagerAgentPrompt {
      - Try to be efficient, e.g. fill forms at once, or chain actions where nothing changes on the page like saving, extracting, checkboxes...
      - only use multiple actions if it makes sense.
      - After you have scrolled down or up, you should always ask yourself if you achieved your goal. If not, you should scroll down or up again.
+
+
+    9. RESULT:
+      - You should always provide a result in the triggerResult action.
+      - The result should be a string that describes the result of the task and matches the user's goal or question.
+      - DO NOT hallucinate the result.
   
       Use a maximum of ${this.maxActionPerStep} actions per task.
   `;
@@ -133,7 +138,7 @@ export class ManagerAgentPrompt {
         - element_text: Visible text or element description.
         - attributes: HTML attributes of the element used for context.
         
-      3. USER STORY: The user story provided by the user. Use it to define the actions you have to perform before an evaluator is called to evaluate the test result.
+      3. TASK: The task asked by the user. Use it to define the actions you have to perform. No failure is tolerated and success is rewarded.
   
       Notes:
       - Only elements with numeric indexes are interactive.
@@ -152,12 +157,12 @@ export class ManagerAgentPrompt {
 
   getSystemPrompt() {
     return `
-      You are a precise QA Automation Engineer Agent that interacts with websites through structured commands. Your role is to:
+      You are a precise Browser Automation Agent that interacts with websites through structured commands. Your role is to:
   
       1. Analyze the provided webpage elements and structure.
-      2. Plan a sequence of actions to execute the test scenario based on the user story provided by the user.
+      2. Plan a sequence of actions to achieve the task provided by the user.
       3. Respond with valid JSON containing your action sequence.
-      4. When you consider the scenario is complete and we can evaluate the test result, use the triggerSuccess to pass it to the evaluator.
+      4. When you consider the scenario is complete and we can evaluate the test result, use the triggerSuccess to pass some data to the evaluator.
   
       Current date and time: ${new Date().toISOString()}
   
@@ -171,8 +176,7 @@ export class ManagerAgentPrompt {
       - scrollDown: { goal: <goal> }
       - scrollUp: { goal: <goal> }
       - goToUrl: { url: <url> }    
-      - triggerSuccess: { reason: <reason> }
-      - triggerFailure: { reason: <reason> }
+      - triggerResult: { data: <data> }
   
       Remember: Your responses must be valid JSON matching the specified format. Each action in the sequence must be valid."""
   `;
@@ -192,30 +196,48 @@ export class ManagerAgentHumanPrompt {
     serializedTasks,
     stringifiedDomState,
     screenshotUrl,
+    /** This is the screenshot without the highlight */
+    pristineScreenshotUrl,
     pageUrl,
+    pixelAbove,
+    pixelBelow,
   }: {
     serializedTasks: string;
     stringifiedDomState: string;
     screenshotUrl: string;
+    pristineScreenshotUrl: string;
     pageUrl: string;
+    pixelAbove: number;
+    pixelBelow: number;
   }) {
     return new HumanMessage({
       content: [
         {
-          type: "image_url",
+          type: 'image_url',
           image_url: {
-            url: screenshotUrl,
-            detail: "high",
+            url: pristineScreenshotUrl,
+            detail: 'high',
           },
         },
         {
-          type: "text",
+          type: 'image_url',
+          image_url: {
+            url: screenshotUrl,
+            detail: 'high',
+          },
+        },
+        {
+          type: 'text',
           text: `
           CURRENT URL: ${pageUrl}
 
+          ... ${pixelAbove} PIXEL ABOVE - SCROLL UP TO SEE MORE ELEMENTS
+
           EXTRACTED DOM ELEMENTS: ${stringifiedDomState} that you can match with the screenshot.
 
-          USER STORY AND TASKS: ${serializedTasks}
+          ... ${pixelBelow} PIXEL BELOW - SCROLL DOWN TO SEE MORE ELEMENTS
+
+          USER TASK AND TASK HISTORY: ${serializedTasks}
           `,
         },
       ],

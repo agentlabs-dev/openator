@@ -71,6 +71,8 @@ Openator is available as a CLI utility and as a web application.
 
 #### Prerequisites
 
+> NOTE: This GUI is not stable yet, please use the CLI version for now.
+
 Before you begin, ensure you have the following installed on your machine:
 
 - Docker

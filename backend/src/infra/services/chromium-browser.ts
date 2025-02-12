@@ -95,6 +95,18 @@ export class ChromiumBrowser implements Browser {
     return this.getPage().mouse.click(x, y);
   }
 
+  async getPixelAbove() {
+    return this.getPage().evaluate(() => {
+      return window.scrollY;
+    });
+  }
+
+  async getPixelBelow() {
+    return this.getPage().evaluate(() => {
+      return window.scrollY + window.innerHeight;
+    });
+  }
+
   async fillInput(text: VariableString, coordinates: Coordinates) {
     await this.getPage().mouse.click(coordinates.x, coordinates.y);
     await this.getPage().keyboard.type(text.dangerousValue(), { delay: 100 });

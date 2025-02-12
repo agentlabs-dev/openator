@@ -66,25 +66,18 @@ export const ManagerAgentActionSchema = z
     }),
     z
       .object({
-        name: z.literal('triggerSuccess'),
+        name: z.literal('triggerResult'),
         params: z.object({
-          reason: z.string(),
+          data: z
+            .string()
+            .describe(
+              'The data to be passed to the evaluator. Most likely the response to the user task.',
+            ),
         }),
         description: z.null(),
       })
       .describe(
-        'Trigger success means you have completed the user story and we can ask the evaluator to evaluate the test result.',
-      ),
-    z
-      .object({
-        name: z.literal('triggerFailure'),
-        params: z.object({
-          reason: z.string(),
-        }),
-        description: z.null(),
-      })
-      .describe(
-        "Trigger failure means you have failed to complete the user story and you don't know how to complete the scenario. You may be stuck somewhere, explain it.",
+        'Trigger result means you have completed the task and we can ask the evaluator to evaluate the test result.',
       ),
   ])
   .describe(

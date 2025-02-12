@@ -11,7 +11,6 @@ import {
 } from './manager-agent.config';
 import { ManagerAgentAction, ManagerResponse } from './manager-agent.types';
 import { Browser, Coordinates } from '@/core/interfaces/browser.interface';
-import { EvaluationAgent } from '../evaluation-agent/evaluation-agent';
 import { Task, TaskAction } from '@/core/entities/task';
 import { LLM } from '@/core/interfaces/llm.interface';
 import { TestResult } from '@/core/entities/test-result';
@@ -30,7 +29,6 @@ export type ManagerAgentConfig = {
   domService: DomService;
   browserService: Browser;
   llmService: LLM;
-  evaluator: EvaluationAgent;
   reporter: AgentReporter;
   eventBus: EventBusInterface;
 };
@@ -41,6 +39,7 @@ export class ManagerAgent {
   private isSuccess: boolean = false;
   private isFailure: boolean = false;
   private reason: string = '';
+  private result: string = '';
   private retries: number = 0;
   private readonly variables: Variable[];
   private currentRun: Run | null = null;
@@ -53,7 +52,6 @@ export class ManagerAgent {
   private readonly browserService: Browser;
   private readonly llmService: LLM;
   private readonly reporter: AgentReporter;
-  private readonly evaluator: EvaluationAgent;
   private readonly eventBus: EventBusInterface;
 
   constructor(config: ManagerAgentConfig) {
@@ -62,7 +60,6 @@ export class ManagerAgent {
     this.browserService = config.browserService;
     this.llmService = config.llmService;
     this.reporter = config.reporter;
-    this.evaluator = config.evaluator;
     this.variables = config.variables;
 
     this.maxActionsPerTask =
@@ -71,10 +68,10 @@ export class ManagerAgent {
     this.eventBus = config.eventBus;
   }
 
-  private onSuccess(reason: string) {
-    this.reporter.success(`Manager agent completed successfully: ${reason}`);
+  private onSuccess(result: string) {
+    this.reporter.success(`Manager agent completed successfully: ${result}`);
     this.isSuccess = true;
-    this.reason = reason;
+    this.result = result;
   }
 
   private onFailure(reason: string) {
@@ -132,6 +129,7 @@ export class ManagerAgent {
 
           return resolve({
             status: 'failed',
+            result: this.result,
             reason:
               'Max number of retried reached. The agent was not able to complete the test.',
           });
@@ -161,30 +159,18 @@ export class ManagerAgent {
         return resolve({
           status: 'failed',
           reason: this.reason,
+          result: this.result,
         });
       }
 
       await this.domService.resetHighlightElements();
 
-      /**
-       * If the Manager Agent completed the task, then we evaluate the test result.
-       */
-      const { status, reason } = await this.evaluator.evaluateTestResult(
-        this.taskManager.getSerializedTasks(),
-        this.taskManager.getEndGoal(),
-      );
-
-      if (status === 'passed') {
-        this.currentRun.setSuccess(reason);
-      } else {
-        this.currentRun.setFailure(reason);
-      }
-
       this.emitRunUpdate();
 
       return resolve({
-        status,
-        reason,
+        status: this.isSuccess ? 'passed' : 'failed',
+        reason: this.reason,
+        result: this.result,
       });
     });
   }
@@ -208,10 +194,7 @@ export class ManagerAgent {
       return actions;
     }
 
-    return actions.filter(
-      (action) =>
-        action.name !== 'triggerSuccess' && action.name !== 'triggerFailure',
-    );
+    return actions.filter((action) => action.name !== 'triggerResult');
   }
 
   async defineNextTask(): Promise<Task> {
@@ -224,16 +207,25 @@ export class ManagerAgent {
       this.maxActionsPerTask,
     ).getSystemMessage();
 
-    const { screenshot, stringifiedDomState, domStateHash } =
-      await this.domService.getInteractiveElements();
+    const {
+      screenshot,
+      pristineScreenshot,
+      stringifiedDomState,
+      domStateHash,
+      pixelAbove,
+      pixelBelow,
+    } = await this.domService.getInteractiveElements();
 
     this.lastDomStateHash = domStateHash;
 
     const humanMessage = new ManagerAgentHumanPrompt().getHumanMessage({
       serializedTasks: this.taskManager.getSerializedTasks(),
+      pristineScreenshotUrl: pristineScreenshot,
       screenshotUrl: screenshot,
       stringifiedDomState,
       pageUrl: this.browserService.getPageUrl(),
+      pixelAbove,
+      pixelBelow,
     });
 
     const messages = [systemMessage, humanMessage];
@@ -388,12 +380,8 @@ export class ManagerAgent {
         await this.browserService.goToUrl(action.data.params.url);
         break;
 
-      case 'triggerSuccess':
-        this.onSuccess(action.data.params.reason);
-        break;
-
-      case 'triggerFailure':
-        this.onFailure(action.data.params.reason);
+      case 'triggerResult':
+        this.onSuccess(action.data.params.data);
         break;
     }
 

@@ -16,25 +16,22 @@ export const startTest = new Command('run:scenario')
   .description('Run a test scenario')
   .option('-f, --file <FILE>', 'Import a test file containing the test cases')
   .option('-u, --url <URL>', 'The webpage to start testing')
-  .option(
-    '-s, --user-story <USER STORY DESCRIPTION>',
-    'The description of the user story to test',
-  )
-  .action(async (options: { url: string; userStory: string; file: string }) => {
+  .option('-t, --task <TASK DESCRIPTION>', 'The task to perform')
+  .action(async (options: { url: string; task: string; file: string }) => {
     const runTestCase = new RunTestCase();
     const runFromFile = new RunFromFile();
 
-    if (!options.file && (!options.url || !options.userStory)) {
+    if (!options.file && (!options.url || !options.task)) {
       console.log(
-        '--url and --user-story arguments are required if no --file is provided',
+        '--url and --task arguments are required if no --file is provided',
       );
       return;
     }
 
-    if (options.url && options.userStory) {
+    if (options.url && options.task) {
       const result = await runTestCase.execute(
         options.url,
-        options.userStory,
+        options.task,
         new EventBus(),
       );
 
