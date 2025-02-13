@@ -17,10 +17,15 @@ import { PlaywrightScreenshoter } from '@/infra/services/playwright-screenshotte
 import { PersistResultService, TaskResult } from './persist-result';
 import { VoyagerTask } from '../types/voyager-task';
 
+export type RunVoyagerTaskOptions = {
+  headless: boolean;
+  resultOutputPath?: string;
+};
+
 export class RunService {
   constructor() {}
 
-  async runVoyagerTask(task: VoyagerTask, persistResultPath?: string) {
+  async runVoyagerTask(task: VoyagerTask, options: RunVoyagerTaskOptions) {
     const {
       web: startUrl,
       ques: userStory,
@@ -34,7 +39,9 @@ export class RunService {
 
     const fileSystem = new InMemoryFileSystem();
     const screenshotService = new PlaywrightScreenshoter(fileSystem);
-    const browser = new ChromiumBrowser();
+    const browser = new ChromiumBrowser({
+      headless: options.headless,
+    });
 
     const llm = new OpenAI4o();
 
@@ -97,8 +104,10 @@ export class RunService {
       eval_reason: evalResult.explanation,
     };
 
-    if (persistResultPath) {
-      const persistResultService = new PersistResultService(persistResultPath);
+    if (options.resultOutputPath) {
+      const persistResultService = new PersistResultService(
+        options.resultOutputPath,
+      );
       persistResultService.storeResult(taskResult);
     }
   }

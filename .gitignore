@@ -12,6 +12,11 @@ out/
 # Ignore TypeScript cache
 *.tsbuildinfo
 
+# Output
+eval/*.json
+eval/*.png
+eval/*.jpg
+
 # Ignore logs
 logs/
 *.log

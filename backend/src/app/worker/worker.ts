@@ -3,13 +3,16 @@ import { RunService } from '../services/run-service';
 import { VoyagerTask } from '../types/voyager-task';
 
 export const main = async () => {
-  const { task, persistResultPath } = workerData as {
+  const { task, persistResultPath, options } = workerData as {
     task: VoyagerTask;
     persistResultPath: string;
+    options: {
+      headless: boolean;
+    };
   };
 
   try {
-    await new RunService().runVoyagerTask(task, persistResultPath);
+    await new RunService().runVoyagerTask(task, options);
 
     parentPort?.postMessage({ success: true, taskId: task.id });
   } catch (error) {

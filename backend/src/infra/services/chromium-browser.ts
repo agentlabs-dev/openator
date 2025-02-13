@@ -20,7 +20,11 @@ export class ChromiumBrowser implements Browser {
 
   private minimumPageLoadTime: number = 400;
 
-  constructor() {}
+  constructor(
+    private options?: {
+      headless: boolean;
+    },
+  ) {}
 
   async launch(url: string) {
     const wsEndpoint = process.env.PLAYWRIGHT_WS_ENDPOINT ?? null;
@@ -36,7 +40,7 @@ export class ChromiumBrowser implements Browser {
       browser = await chromium.connect(wsEndpoint);
     } else {
       browser = await chromium.launch({
-        headless: false,
+        headless: this.options.headless,
       });
     }
 

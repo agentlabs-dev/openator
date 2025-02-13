@@ -95,16 +95,23 @@ npm install
 echo OPENAI_API_KEY="<replace-with-your-key>" >> .env
 ```
 
-#### Run an example test case
+#### Usage
 
-```
-npm run example:voyager
+```bash
+npm run openator [-- options]
 ```
 
-#### Run your own test case
+| Option                | Description                                                                                       |
+|-----------------------|---------------------------------------------------------------------------------------------------|
+| -f, --file <FILE>     | Specify the file containing WebVoyager test cases. Default to our web voyager benchmark.                                                |
+| -w, --web <WEBSITE>   | The website name to run the benchmark on (e.g., Allrecipes, Amazon). Default: Runs on all available websites. |
+| -t, --threads <THREADS> | The number of threads to run the benchmark on. Default: 1                                      |
+| -h, --headless        | Run the benchmark in headless mode. Default: false                                                |
 
-```
-npm run scenario -- --url="start-url" --user-story="As a user, I can <replace-with-your-user-story>"
+##### Example
+
+```bash
+npm run openator -- --web=Amazon --threads=5 --headless
 ```
 
 ## Roadmap for a stable release
