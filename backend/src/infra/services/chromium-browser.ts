@@ -93,8 +93,17 @@ export class ChromiumBrowser implements Browser {
     return this.getPage().url();
   }
 
-  mouseClick(x: number, y: number) {
-    return this.getPage().mouse.click(x, y);
+  async mouseClick(x: number, y: number) {
+    const safeClick = async () => {
+      try {
+        this.getPage().mouse.click(x, y);
+      } catch (error) {
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        this.getPage().mouse.click(x, y);
+      }
+    };
+
+    return safeClick();
   }
 
   async getPixelAbove() {

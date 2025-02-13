@@ -60,7 +60,7 @@ export class ManagerAgent {
   private readonly reporter: AgentReporter;
   private readonly eventBus: EventBusInterface;
   private readonly feedbackAgent: FeedbackAgent;
-  private readonly memoryLearnings: string[] = [];
+  public readonly memoryLearnings: string[] = [];
   private lastResult: string = '';
 
   constructor(config: ManagerAgentConfig) {
@@ -167,9 +167,9 @@ export class ManagerAgent {
             ${this.taskManager.getTaskHistorySummary()}
           `,
         });
-        const result = await flowAnalyst.perform(flowAnalystTask);
 
-        console.log('FLOW ANALYST RESULT', result);
+        // const result = await flowAnalyst.perform(flowAnalystTask);
+        // console.log('FLOW ANALYST RESULT', result);
 
         const task = await this.defineNextTask();
 
@@ -258,8 +258,6 @@ export class ManagerAgent {
     } = await this.domService.getInteractiveElements();
 
     this.lastDomStateHash = domStateHash;
-
-    console.log('-----this.memoryLearnings', this.memoryLearnings);
 
     const humanMessage = new ManagerAgentHumanPrompt().getHumanMessage({
       memoryLearnings: this.memoryLearnings.join(' ; '),
@@ -446,20 +444,26 @@ export class ManagerAgent {
 
       case 'extractContent':
         const content = await this.browserService.extractContent();
-        this.memoryLearnings.push(
-          `Extracted content on page ${this.browserService.getPageUrl()}: ${content}`,
-        );
 
         summarizeTask.prepare({
           images: [],
           memory: '',
           input: `Our goal is to ${this.taskManager.getEndGoal()} Here is the content extracted from the page: ${content}.`,
         });
+
         const summarized = await summarizer.perform(summarizeTask);
 
-        console.log('****TAKEAWAYS', summarized.takeaways);
+        // action.complete(content);
+        // this.memoryLearnings.push(
+        //   `Extracted content on page ${this.browserService.getPageUrl()}: ${content}`,
+        // );
+        // Let's try by sending the summarized content to the user
+        this.memoryLearnings.push(
+          `Key takeways from content on page ${this.browserService.getPageUrl()}: ${summarized.takeaways}`,
+        );
+        action.complete(summarized.takeaways);
 
-        action.complete(content);
+        console.log('-----this.memoryLearnings', this.memoryLearnings);
         break;
 
       case 'triggerResult':

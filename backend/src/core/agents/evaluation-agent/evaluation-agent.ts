@@ -13,16 +13,19 @@ export class EvaluationAgent {
     screenshotUrls,
     task,
     answer,
+    memory,
   }: {
     screenshotUrls: string[];
     task: string;
     answer: string;
+    memory: string;
   }) {
     const systemMessage = new EvaluationAgentSystemPrompt().getSystemMessage();
     const humanMessage = new EvaluationAgentUserPrompt().getUserMessage({
       screenshotUrls,
       task,
       answer,
+      memory,
     });
 
     const parser = new JsonOutputParser<EvaluationResponse>();

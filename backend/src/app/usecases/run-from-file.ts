@@ -129,6 +129,7 @@ export class RunFromFile {
         screenshotUrls,
         task: userStory,
         answer: result,
+        memory: managerAgent.memoryLearnings.join('\n'),
       });
 
       const taskResult: TaskResult = {
