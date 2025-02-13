@@ -1,6 +1,6 @@
 import { VariableString } from '@/core/entities/variable-string';
 import { Browser } from '@/core/interfaces/browser.interface';
-import { Readability } from '@mozilla/readability';
+import { convertHtmlToMarkdown } from 'dom-to-semantic-markdown';
 import { JSDOM } from 'jsdom';
 import {
   Browser as PBrowser,
@@ -111,7 +111,7 @@ export class ChromiumBrowser implements Browser {
 
   async fillInput(text: VariableString, coordinates: Coordinates) {
     await this.getPage().mouse.click(coordinates.x, coordinates.y);
-    await this.getPage().keyboard.press('Control+A');
+    await this.getPage().keyboard.press('ControlOrMeta+A');
     await this.getPage().keyboard.press('Backspace');
     await this.getPage().keyboard.type(text.dangerousValue(), { delay: 100 });
   }
@@ -137,8 +137,10 @@ export class ChromiumBrowser implements Browser {
   async extractContent() {
     const html = await this.getPage().content();
     const dom = new JSDOM(html);
-    const reader = new Readability(dom.window.document);
-    const content = reader.parse();
-    return content.textContent;
+    const markdown = convertHtmlToMarkdown(html, {
+      overrideDOMParser: new dom.window.DOMParser(),
+      extractMainContent: true,
+    });
+    return markdown;
   }
 }

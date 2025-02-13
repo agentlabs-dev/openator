@@ -20,10 +20,16 @@ export class TaskAction {
   private _reason: string | undefined;
   private _status: TaskActionStatus;
 
+  /**
+   * The result of the action when it is completed.
+   */
+  public result: string;
+
   constructor(public readonly data: ManagerAgentAction) {
     this.id = crypto.randomUUID();
     this._status = 'pending';
     this.data = data;
+    this.result = '';
   }
 
   get status() {
@@ -34,8 +40,9 @@ export class TaskAction {
     this._status = 'running';
   }
 
-  complete() {
+  complete(result?: string) {
     this._status = 'completed';
+    this.result = result ?? 'ok';
   }
 
   cancel(reason: string) {
@@ -46,6 +53,7 @@ export class TaskAction {
   fail(reason: string) {
     this._status = 'failed';
     this._reason = reason;
+    this.result = `Action failed with reason: ${reason}`;
   }
 
   public asObject() {
@@ -56,6 +64,15 @@ export class TaskAction {
       name: this.data.name,
       params: this.data.params,
       description: this.data.description,
+    };
+  }
+
+  public objectForLLM() {
+    return {
+      description: this.data.description,
+      status: this.status,
+      result: this.result,
+      reason: this._reason,
     };
   }
 }
@@ -136,6 +153,13 @@ export class Task {
   fail(reason: string) {
     this._status = 'failed';
     this._reason = reason;
+  }
+
+  public objectForLLM() {
+    return {
+      goal: this.goal,
+      actionsTaken: this.actions.map((action) => action.objectForLLM()),
+    };
   }
 
   public serialize(): string {

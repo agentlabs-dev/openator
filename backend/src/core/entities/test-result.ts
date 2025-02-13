@@ -6,4 +6,5 @@ export type TestResult = {
   status: TestResultStatus;
   reason: string;
   result: string;
+  stepCount: number;
 };

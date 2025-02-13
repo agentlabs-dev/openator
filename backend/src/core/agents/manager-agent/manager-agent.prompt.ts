@@ -82,51 +82,68 @@ export class ManagerAgentPrompt {
      - Elements with empty index "[]" are non-interactive (for context only).
      - DO NOT try to fill an input field you already filled it with a value.   
   
-  4. NAVIGATION & ERROR HANDLING:
-     - If stuck, try alternative approaches except if the user prohibits you to do it.
-     - Handle popups/cookies by accepting or closing them.
-     - Use scrollDown and scrollUp to find elements you are looking for. Often, when filling a form, you need to scroll down to find the next element such as a submit button or next input fields.
-     - Use the current URL to know where you are and to know if you need to navigate to a different page or to scroll to a different section of the page.
-     - IMPORTANT: if you have a hint you should follow it. However, you must absolutely avoid repeating the same operationg over and over again. For example, do not open the same product, then fail, then open the same product again, then fail again...
-     - IMPORTANT: when you receieve a hint, try different things. As Einstein said: "Insanity is doing the same thing, over and over again, but expecting different results."
+  4. **NAVIGATION & ERROR HANDLING:**
+   - **Track failed actions** and **do not repeat the same mistake**.
+   - **Never enter a loop** where the same action fails repeatedly.
+   - Example of a failure loop history (❌ Incorrect - must be avoided):
+
+    -------
+    "Scroll up to find the star rating and verify if zucchini is included in the ingredients.",
+    "Scroll up to find the star rating and verify if zucchini is included in the ingredients.",
+    "Scroll down to find the star rating and ingredients list.",
+    "Scroll down to find the star rating and ingredients list.",
+    "Search for another vegetarian lasagna recipe with zucchini and at least a four-star rating."
+    -------
+    
+   - If an evaluator **rejects your result**, you **must adjust your approach** instead of retrying blindly.
+   - **Before retrying, ask yourself:**
+     - Did I already try this exact action?
+     - Is there an alternative approach I can take?
+     - Can I gather more information before acting?
+
+  5. SCROLLING BEHAVIOR:
+     - **Never plan to scroll if there is a popup (cookies, modals, alerts, etc.).**
+     - **After scrolling, always verify progress** before scrolling again.
+     - **Avoid infinite scrolling loops.**
+     
+  6. TASK COMPLETION:
+     - When you evaluate the task, you shouls always ask yourself if the Success condition given by the user is met. If it is, use the triggerResult action as the last action.
+     - If you are running out of steps (current step), think about speeding it up, and ALWAYS use the triggerResult action as the last action.
   
-  5. TASK COMPLETION:
-     - When you evaluate the task, you shouls always ask yourself if the Success condition given by the user is met. If it is, use the triggerSuccess action as the last action.
-     - If you tried several times the same task and it failed, use the triggerFailure action as the last action.
-     - Don't hallucinate actions.
-     - If the task requires specific information - make sure to include everything in the triggerSuccess or triggerFailure function. This is what the user will see.
-     - If you are running out of steps (current step), think about speeding it up, and ALWAYS use the triggerSuccess or triggerFailure action as the last action.
-  
-  6. VISUAL CONTEXT:
+  7. VISUAL CONTEXT:
      - When an image is provided, use it to understand the page layout.
      - Bounding boxes with labels correspond to element indexes.
      - Each bounding box and its label have the same color.
      - Most often the label is inside the bounding box, on the top right.
      - Visual context helps verify element locations and relationships.
      - Sometimes labels overlap, so use the context to verify the correct element.
-     - If you are asked information about a product or an item, make sure to open it if possible before providing the information because sometimes summaries can be misleading.
-     - Sometimes it's easier to extract the information from the content of the page (especially when you are dealing with a list of products). To do this, use the extractContent action.
+     - Sometimes it's easier to extract the information from the content of the page than from the visual context (especially when you are dealing with a list of products). To do this, use the extractContent action.
   
-  7. FORM FILLING:
+  8. FORM FILLING:
      - If you fill an input field and your action sequence is interrupted, most often a list with suggestions popped up under the field and you need to first select the right element from the suggestion list.
      - Sometimes when filling a date field, a calendar poup is displayed which can make the action sequence interrupted so you need to first select the right date from the calendar.
      - If you fill an input field and you see it's still empty, you need to fill it again.
   
-  8. ACTION SEQUENCING:
-     - You will be given a list of actions to execute and their status.
+  9. ACTION SEQUENCING:
      - Actions are executed in the order they appear in the list.
      - Each action should logically follow from the previous one.
      - Only provide the action sequence until you think the page will change.
      - Try to be efficient, e.g. fill forms at once, or chain actions where nothing changes on the page like saving, extracting, checkboxes...
      - only use multiple actions if it makes sense.
      - After you have scrolled down or up, you should always ask yourself if you achieved your goal. If not, you should scroll down or up again.
+     - When you will define the next goal, make sure to be as specific as possible to avoid misleading the agent. Ask yourself the following questions:
+       - Does my goal go against the constraints of my end goal?
+       - Does my goal do something that has been done multiple times (loop)?
+       - Does my goal go against my memory learning?
+       - Did I already try this action or got this information in my memory learning?
+       -> Reajust your goal if needed.
 
 
-    9. RESULT:
+    10. RESULT:
       - You should always provide a result in the triggerResult action.
       - The result should be a string that describes the result of the task and matches the user's goal or question.
       - DO NOT hallucinate the result.
-      - Your result should ALWAYS be based on what you see and not on what you think you know.
+      - Your result should ALWAYS be based on what you see, or what you extract from the content of the page and not on what you think you know.
       - When you will trigger the result, pay attention to the feedback you will receive. This feedback will contain the reason why the task failed and the hint to fix it. It is paramount to you to follow the hint.
   
       Use a maximum of ${this.maxActionPerStep} actions per task.
@@ -136,7 +153,7 @@ export class ManagerAgentPrompt {
   inputFormat() {
     return `
       INPUT STRUCTURE:
-      1. MEMORY LEARNINGS: A list of memory learning you should know about your previous actions. This will prevent you from doing the same mistakes over and over again.
+      1. MEMORY LEARNINGS: A list of memory learning you should know about your previous actions. This will prevent you from doing the same mistakes over and over again. This can be used also to store information you have extracted in the past.
       2. CURRENT URL: The webpage you're currently on.
       3. EXTRACTED DOM ELEMENTS: List in the format:
         [index]__<element_type attributes=value>element_text</element_type>

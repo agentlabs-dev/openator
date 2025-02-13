@@ -20,6 +20,8 @@ import { VariableString } from '@/core/entities/variable-string';
 import { Run } from '@/core/entities/run';
 import { EventBusInterface } from '@/core/interfaces/event-bus.interface';
 import { FeedbackAgent } from '../feedback-agent/feedback-agent';
+import { flowAnalyst, flowAnalystTask } from '../flow-analyst/flow-analyst';
+import { summarizer, summarizeTask } from '../summarize-agent/summarize-agent';
 
 export type ManagerAgentConfig = {
   maxActionsPerTask?: number;
@@ -43,6 +45,7 @@ export class ManagerAgent {
   private reason: string = '';
   private result: string = '';
   private retries: number = 0;
+  private stepCount: number = 0;
   private feedbackRetries: number = 0;
   private readonly variables: Variable[];
   private currentRun: Run | null = null;
@@ -58,6 +61,7 @@ export class ManagerAgent {
   private readonly eventBus: EventBusInterface;
   private readonly feedbackAgent: FeedbackAgent;
   private readonly memoryLearnings: string[] = [];
+  private lastResult: string = '';
 
   constructor(config: ManagerAgentConfig) {
     this.taskManager = config.taskManager;
@@ -107,11 +111,15 @@ export class ManagerAgent {
     this.retries = 0;
   }
 
+  private async incrementStepCount() {
+    this.stepCount += 1;
+  }
+
   get isCompleted() {
     return this.isSuccess || this.isFailure;
   }
 
-  async launch(startUrl: string, initialPrompt: string) {
+  async launch(startUrl: string, initialPrompt: string): Promise<TestResult> {
     const vStartUrl = new VariableString(startUrl, this.variables);
 
     await this.browserService.launch(vStartUrl.dangerousValue());
@@ -141,12 +149,27 @@ export class ManagerAgent {
           return resolve({
             status: 'failed',
             result: this.result,
+            stepCount: this.stepCount,
             reason:
               'Max number of retried reached. The agent was not able to complete the test.',
           });
         }
 
+        this.incrementStepCount();
+
         this.reporter.loading('Defining next task...');
+
+        flowAnalystTask.prepare({
+          images: [],
+          memory: '',
+          input: `
+            # Task history:
+            ${this.taskManager.getTaskHistorySummary()}
+          `,
+        });
+        const result = await flowAnalyst.perform(flowAnalystTask);
+
+        console.log('FLOW ANALYST RESULT', result);
 
         const task = await this.defineNextTask();
 
@@ -171,6 +194,7 @@ export class ManagerAgent {
           status: 'failed',
           reason: this.reason,
           result: this.result,
+          stepCount: this.stepCount,
         });
       }
 
@@ -182,6 +206,7 @@ export class ManagerAgent {
         status: this.isSuccess ? 'passed' : 'failed',
         reason: this.reason,
         result: this.result,
+        stepCount: this.stepCount,
       });
     });
   }
@@ -274,7 +299,7 @@ export class ManagerAgent {
   }
 
   debugRun() {
-    console.log('this.currentRun', JSON.stringify(this.currentRun, null, 2));
+    // console.log('this.currentRun', JSON.stringify(this.currentRun, null, 2));
   }
 
   async executeTask(task: Task) {
@@ -298,7 +323,6 @@ export class ManagerAgent {
         }
 
         await this.executeAction(action);
-        action.complete();
         this.emitRunUpdate();
 
         await new Promise((resolve) =>
@@ -323,11 +347,12 @@ export class ManagerAgent {
       }
     }
 
-    this.taskManager.add(task);
-
     this.reporter.success(task.goal);
   }
 
+  /**
+   * Updates the action result when the action is completed or failed
+   */
   private async executeAction(action: TaskAction) {
     let coordinates: Coordinates | null = null;
 
@@ -353,6 +378,8 @@ export class ManagerAgent {
 
         await this.domService.resetHighlightElements();
 
+        action.complete();
+
         break;
 
       case 'fillInput':
@@ -361,6 +388,7 @@ export class ManagerAgent {
         );
 
         if (!coordinates) {
+          action.fail('Index or coordinates not found');
           throw new Error('Index or coordinates not found');
         }
 
@@ -373,12 +401,16 @@ export class ManagerAgent {
         await this.browserService.fillInput(variableString, coordinates);
         await this.domService.resetHighlightElements();
 
+        action.complete();
+
         break;
 
       case 'scrollDown':
         await this.browserService.scrollDown();
         await this.domService.resetHighlightElements();
         await this.domService.highlightElementWheel('down');
+
+        action.complete();
 
         break;
 
@@ -388,41 +420,69 @@ export class ManagerAgent {
         await this.domService.resetHighlightElements();
         await this.domService.highlightElementWheel('up');
 
+        action.complete();
+
         break;
 
       case 'takeScreenshot':
         await this.domService.resetHighlightElements();
         await this.domService.highlightForSoM();
+
+        action.complete();
+
         break;
 
       case 'goToUrl':
         await this.browserService.goToUrl(action.data.params.url);
+
+        action.complete();
         break;
 
       case 'goBack':
         await this.browserService.goBack();
+
+        action.complete();
         break;
 
       case 'extractContent':
         const content = await this.browserService.extractContent();
-        console.log('content', content);
+        this.memoryLearnings.push(
+          `Extracted content on page ${this.browserService.getPageUrl()}: ${content}`,
+        );
+
+        summarizeTask.prepare({
+          images: [],
+          memory: '',
+          input: `Our goal is to ${this.taskManager.getEndGoal()} Here is the content extracted from the page: ${content}.`,
+        });
+        const summarized = await summarizer.perform(summarizeTask);
+
+        console.log('****TAKEAWAYS', summarized.takeaways);
+
+        action.complete(content);
         break;
 
       case 'triggerResult':
         const { pristineScreenshot } = await this.domService.getDomState();
+        const answer = action.data.params.data;
         const { result, explanation, hint, memoryLearning } =
           await this.feedbackAgent.evaluate({
             pageUrl: this.browserService.getPageUrl(),
             screenshotUrls: [pristineScreenshot],
             task: this.taskManager.getEndGoal(),
-            answer: action.data.params.data,
+            answer,
+            taskHistorySummary: this.taskManager.getSerializedTasks(),
+            previousTaskResult: JSON.stringify(
+              this.taskManager.getLatestTaskPerformed()?.objectForLLM(),
+            ),
           });
 
-        if (result === 'success') {
-          this.onSuccess(explanation);
+        if (result === 'success' || result === 'unknown') {
+          action.complete(explanation);
+          this.onSuccess(answer);
         } else {
           if (this.feedbackRetries > this.maxRetries) {
-            return this.onFailure('Max feedback retries reached');
+            this.onFailure('Max feedback retries reached');
           }
 
           action.fail(JSON.stringify({ result, explanation, hint }));

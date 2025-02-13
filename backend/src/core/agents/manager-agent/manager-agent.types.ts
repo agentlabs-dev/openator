@@ -126,7 +126,7 @@ Example Response 1:
   "currentState": {
     "evaluationPreviousGoal": "Cookies have been accepted. We can now proceed to login.",
     "memory": "Cookies accepted, ready to login. End goal is to login to my account.",
-    "nextGoal": "Display the login form.",
+    "nextGoal": "Display the login form by clicking the login button",
   },
   "actions": [{"name": "clickElement", "params": {"index": 3}, "description": "Click the login button"}]
 }
@@ -146,7 +146,7 @@ Example Response 3:
   "currentState": {
     "evaluationPreviousGoal": "We need to scroll down to find the login form.",
     "memory": "We need to scroll down to find the login form. End goal is to login to my account.",
-    "nextGoal": "Scroll down to find the login form."
+    "nextGoal": "Find a recipe that has more than 100 reviews and is not Spicy Vegan Recipe"
   },
    "actions": [{"name": "scrollDown", "description": "Scroll down to find the login form"}]
 }

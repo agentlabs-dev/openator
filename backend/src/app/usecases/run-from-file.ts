@@ -39,8 +39,6 @@ interface ParsedContent {
 
 export class RunFromFile {
   async execute(filePath: string) {
-    const results: { success: boolean; reason: string; case: TaskCase }[] = [];
-
     let fileContent: string;
 
     try {
@@ -120,14 +118,17 @@ export class RunFromFile {
         eventBus: new EventBus(),
       });
 
-      const result = await managerAgent.launch(startUrl, userStory);
+      const { result, stepCount } = await managerAgent.launch(
+        startUrl,
+        userStory,
+      );
       const endTime = new Date();
       const durationSeconds = (endTime.getTime() - startTime.getTime()) / 1000;
 
       const evalResult = await new EvaluationAgent(llm).evaluate({
         screenshotUrls,
         task: userStory,
-        answer: result.reason,
+        answer: result,
       });
 
       const taskResult: TaskResult = {
@@ -135,7 +136,8 @@ export class RunFromFile {
         task_id: taskId,
         task_prompt: userStory,
         web: startUrl,
-        result: result.status,
+        result: result,
+        step_count: stepCount,
         start_time: startTime,
         end_time: endTime,
         duration_seconds: durationSeconds,
@@ -148,14 +150,6 @@ export class RunFromFile {
       );
 
       persistResultService.storeResult(taskResult);
-
-      results.push({
-        success: result.status === 'passed',
-        reason: result.status,
-        case: testCase,
-      });
     }
-
-    return results;
   }
 }

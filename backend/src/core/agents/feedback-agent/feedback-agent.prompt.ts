@@ -12,6 +12,10 @@ export class EvaluationAgentSystemPrompt {
     2. Result Screenshots: This is a visual representation of the screen showing the result or intermediate state of performing a web task. It serves as visual proof of the actions taken in response to the instruction, and may not represent everything the agent sees.
 
     3. Result Response: This is a textual response obtained after the execution of the web task. It serves as textual result in response to the instruction.
+    
+    4. Task History Summary: This is a summary of the task history of the agent, it serves as context proof of the actions performed by the agent.
+
+    5. Previous Task Result: This is the result of the previous task, it serves as context proof of the decision making of the agent.
 
     
     -- You DO NOT NEED to interact with web pages or perform actions such as booking flights or conducting searches on websites.
@@ -54,12 +58,21 @@ export class EvaluationAgentSystemPrompt {
 export class EvaluationAgentUserPrompt {
   constructor() {}
 
-  getUserPrompt({ pageUrl, task, answer, screenshotCount }) {
+  getUserPrompt({
+    pageUrl,
+    task,
+    answer,
+    screenshotCount,
+    taskHistorySummary,
+    previousTaskResult,
+  }) {
     return `
     CURRENT PAGE URL: ${pageUrl}
     TASK: ${task}  
     RESULT RESPONSE: ${answer}
     ${screenshotCount} screenshot at the end:
+    TASK HISTORY SUMMARY: ${taskHistorySummary}
+    PREVIOUS TASK RESULT: ${previousTaskResult}
     `;
   }
 
@@ -68,11 +81,15 @@ export class EvaluationAgentUserPrompt {
     screenshotUrls,
     task,
     answer,
+    taskHistorySummary,
+    previousTaskResult,
   }: {
     pageUrl: string;
     screenshotUrls: string[];
     task: string;
     answer: string;
+    taskHistorySummary: string;
+    previousTaskResult: string;
   }) {
     if (!screenshotUrls.length) {
       throw new Error('No screenshot URLs provided to the evaluation agent');
@@ -99,6 +116,8 @@ export class EvaluationAgentUserPrompt {
             task,
             answer,
             screenshotCount: last3Screenshots.length,
+            taskHistorySummary,
+            previousTaskResult,
           }),
         },
         ...screenshotPrompts,

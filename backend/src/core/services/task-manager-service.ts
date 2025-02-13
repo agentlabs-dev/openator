@@ -22,16 +22,30 @@ export class TaskManagerService {
     this.tasks = this.tasks.map((t) => (t.id === task.id ? task : t));
   }
 
-  getLatestTask() {
-    return this.tasks[this.tasks.length - 1] ?? null;
+  getLatestTaskPerformed() {
+    return (
+      this.tasks.filter((t) => t.status !== 'running')[this.tasks.length - 1] ??
+      null
+    );
+  }
+
+  getTaskHistorySummary() {
+    return this.tasks.map((t) => t.goal);
   }
 
   getSerializedTasks() {
-    console.log('this.tasks', JSON.stringify(this.tasks, null, 2));
+    const serialized = JSON.stringify(
+      {
+        endGoal: this.endGoal,
+        taskHistorySummary: this.getTaskHistorySummary(),
+        previousTaskResult: this.getLatestTaskPerformed()?.objectForLLM(),
+      },
+      null,
+      2,
+    );
 
-    return JSON.stringify({
-      endGoal: this.endGoal,
-      taskHistory: JSON.stringify(this.tasks),
-    });
+    console.log('serialized', serialized);
+
+    return serialized;
   }
 }

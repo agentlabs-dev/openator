@@ -32,7 +32,7 @@ export class EvaluationAgentSystemPrompt {
     { "result": "failed", "explanation": "The given result was 3 stars, but the latest screenshot mentions 5 stars which does not make sense." }
 
     Example 3:
-    { "result": "unknown", "explanation": "The agent did not provide a summary of the reviews." }
+    { "result": "unknown", "explanation": "The agent did provide a summary but from the screenshot, we cannot know if it is correct or not." }
     `;
   }
 

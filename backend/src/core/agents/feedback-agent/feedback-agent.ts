@@ -14,11 +14,15 @@ export class FeedbackAgent {
     screenshotUrls,
     task,
     answer,
+    taskHistorySummary,
+    previousTaskResult,
   }: {
     pageUrl: string;
     screenshotUrls: string[];
     task: string;
     answer: string;
+    previousTaskResult: string;
+    taskHistorySummary: string;
   }) {
     const systemMessage = new EvaluationAgentSystemPrompt().getSystemMessage();
     const humanMessage = new EvaluationAgentUserPrompt().getUserMessage({
@@ -26,6 +30,8 @@ export class FeedbackAgent {
       screenshotUrls,
       task,
       answer,
+      taskHistorySummary,
+      previousTaskResult,
     });
 
     const parser = new JsonOutputParser<EvaluationResponse>();
@@ -35,7 +41,7 @@ export class FeedbackAgent {
       parser,
     );
 
-    console.log('EvaluationAgent response', JSON.stringify(response, null, 2));
+    console.log('FeedbackAgent response', JSON.stringify(response, null, 2));
 
     return response;
   }

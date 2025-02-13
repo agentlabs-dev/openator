@@ -6,6 +6,7 @@ export type TaskResult = {
   task_prompt: string;
   web: string;
   result: string;
+  step_count: number;
   start_time: Date;
   end_time: Date;
   duration_seconds: number;
