@@ -18,13 +18,8 @@ import { PersistResultService, TaskResult } from '../services/persist-result';
 import { EvaluationAgent } from '@/core/agents/evaluation-agent/evaluation-agent';
 import { LocalFileSystem } from '@/infra/services/local-file-system';
 import { FeedbackAgent } from '@/core/agents/feedback-agent/feedback-agent';
-
-interface TaskCase {
-  web: string;
-  ques: string;
-  id: string;
-  web_name: string;
-}
+import { VoyagerTask } from '../types/voyager-task';
+import { RunService } from '../services/run-service';
 
 interface ParsedContent {
   context: {
@@ -34,7 +29,7 @@ interface ParsedContent {
       is_secret: boolean;
     }[];
   };
-  tasks: TaskCase[];
+  tasks: VoyagerTask[];
 }
 
 export class RunFromFile {
@@ -56,101 +51,11 @@ export class RunFromFile {
       );
     }
 
-    const context = parsedContent.context;
+    const persistResultPath = '/tmp/results.json';
 
     for (const [index, testCase] of parsedContent.tasks.entries()) {
-      const {
-        web: startUrl,
-        ques: userStory,
-        web_name: webName,
-        id: taskId,
-      } = testCase;
-
-      console.log('--------------------------------');
-      console.log(
-        `TEST ${index + 1} of ${parsedContent.tasks.length} - ${webName} - ${taskId}`,
-      );
-      console.log('--------------------------------');
-
-      const fileSystem = new InMemoryFileSystem();
-      const screenshotService = new PlaywrightScreenshoter(fileSystem);
-      const browser = new ChromiumBrowser();
-
-      const llm = new OpenAI4o();
-
-      const eventBus = new EventBus();
-
-      const localFileSystem = new LocalFileSystem();
-
-      const screenshotUrls: string[] = [];
-      eventBus.on(
-        'pristine-screenshot:taken',
-        async (screenshotData: string) => {
-          const buffer = localFileSystem.bufferFromStringUrl(screenshotData);
-          const screenshotFileName = `screenshot_${webName}_${taskId}_${Date.now()}.png`;
-          await localFileSystem.saveScreenshot(screenshotFileName, buffer);
-
-          screenshotUrls.push(screenshotData);
-        },
-      );
-
-      const feedbackAgent = new FeedbackAgent(llm);
-
-      const startTime = new Date();
-
-      const managerAgent = new ManagerAgent({
-        variables: context.variables.map(
-          (variable) =>
-            new Variable({
-              name: variable.name,
-              value: variable.value,
-              isSecret: variable.is_secret,
-            }),
-        ),
-        reporter: new OraReporter('Manager Agent'),
-        taskManager: new TaskManagerService(),
-        domService: new DomService(screenshotService, browser, eventBus),
-        browserService: browser,
-        feedbackAgent,
-        llmService: llm,
-        maxActionsPerTask: DEFAULT_AGENT_MAX_ACTIONS_PER_TASK,
-        maxRetries: DEFAULT_AGENT_MAX_RETRIES,
-        eventBus: new EventBus(),
-      });
-
-      const { result, stepCount } = await managerAgent.launch(
-        startUrl,
-        userStory,
-      );
-      const endTime = new Date();
-      const durationSeconds = (endTime.getTime() - startTime.getTime()) / 1000;
-
-      const evalResult = await new EvaluationAgent(llm).evaluate({
-        screenshotUrls,
-        task: userStory,
-        answer: result,
-        memory: managerAgent.memoryLearnings.join('\n'),
-      });
-
-      const taskResult: TaskResult = {
-        web_name: webName,
-        task_id: taskId,
-        task_prompt: userStory,
-        web: startUrl,
-        result: result,
-        step_count: stepCount,
-        start_time: startTime,
-        end_time: endTime,
-        duration_seconds: durationSeconds,
-        eval_result: evalResult.result,
-        eval_reason: evalResult.explanation,
-      };
-
-      const persistResultService = new PersistResultService(
-        '/tmp/results.json',
-      );
-
-      persistResultService.storeResult(taskResult);
+      console.log(`TEST ${index + 1} of ${parsedContent.tasks.length}`);
+      await new RunService().runVoyagerTask(testCase, persistResultPath);
     }
   }
 }

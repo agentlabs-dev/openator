@@ -4,6 +4,7 @@ import ora from 'ora-classic';
 import 'dotenv/config';
 import { RunFromFile } from '@/app/usecases/run-from-file';
 import { EventBus } from '@/core/services/realtime-reporter';
+import { RunParallelFromFile } from '@/app/usecases/run-parallel-from-file';
 
 if (!process.env.OPENAI_API_KEY) {
   console.error(
@@ -47,6 +48,21 @@ export const startTest = new Command('run:scenario')
     }
   });
 
+export const bench = new Command('run:benchmark')
+  .description('Start the voyager benchmark')
+  .option(
+    '-f --file <FILE>',
+    'Import a test file containing the webvoyager test cases',
+  )
+  .action(async (options: { file: string }) => {
+    const runParallelFromFile = new RunParallelFromFile();
+    const file =
+      options.file ||
+      '/Users/kevinpiacentini/Projects/openator/examples/web-voyager-questions.json';
+    await runParallelFromFile.execute(file);
+  });
+
 export default {
   startTest,
+  bench,
 };

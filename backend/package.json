@@ -12,6 +12,7 @@
     "start:dev": "nest start --watch",
     "example:file": "npm run scenario -- --file=../examples/passing-cases.json",
     "example:voyager": "npm run scenario -- --file=../examples/web-voyager-questions.json",
+    "bench": "ts-node -r tsconfig-paths/register src/interfaces/cli/index.ts run:benchmark",
     "scenario": "ts-node -r tsconfig-paths/register src/interfaces/cli/index.ts run:scenario",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
