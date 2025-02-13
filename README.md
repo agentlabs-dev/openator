@@ -69,45 +69,8 @@ Openator is available as a CLI utility and as a web application.
 
 ### GUI Version
 
-#### Prerequisites
 
-> NOTE: This GUI is not stable yet, please use the CLI version for now.
-
-Before you begin, ensure you have the following installed on your machine:
-
-- Docker
-- Docker Compose
-
-You can download Docker from [here](https://www.docker.com/products/docker-desktop) and Docker Compose from [here](https://docs.docker.com/compose/install/).
-
-
-#### Clone the repository
-
-```bash
-git clone git@github.com:agentlabs-dev/openator.git
-cd openator
-```
-
-#### Add your OpenAI API key in your .env file
-
-```bash
-echo OPENAI_API_KEY="<replace-with-your-key>" >> .env
-```
-
-#### Run the web application
-
-```bash
-make up
-```
-
-or to run in detached mode
-
-```bash
-make upd
-make logs
-```
-
-This command will start the web application at `http://localhost`.
+> This is work in progress
 
 
 ### CLI Version
@@ -162,7 +125,7 @@ We're committed to improving the project, feel free to open an issue if you have
 | Persist voyager results in file       |  🏗️   | <ul><li>we need to persist screenshots and results in a file for every test we run</li></ul>     
 | Refine user inputs       |  🏗️   | <ul><li>We must make sure that the Manager Agent and the Evaluation Agent get distinct inputs so the Manager Agent does not try to update its behavior based on the expected result</li></ul>                                                             |
 | Provide a GUI |    🏗️   | <ul><li>Add docker configuration</li><li>Add a simple UI to create a test</li></ul> |
-| Build a serious benchmark framework      |  🏗️  | <ul><li>The only serious way to improve the agent is to build a serious benchmark dedicated to the web testing.</li></ul>     
+| Allow to launch the Web Voyager benchmark in multiple threads      |  ✅️  | <ul><li>The only serious way to improve the agent is to build a serious benchmark dedicated to the web testing.</li></ul>     
 | Add OpenAI YAML spec and generate frontend SDK dynamically | 🏗️   | <ul><li>Automatically add OpenAI YAML specification</li><li>Generate frontend SDK dynamically based on the specification</li></ul>
 
 
