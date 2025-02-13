@@ -5,6 +5,18 @@
     "tasks": [
         {
           "web_name": "Allrecipes",
+          "id": "Allrecipes--0",
+          "ques": "Provide a recipe for vegetarian lasagna with more than 100 reviews and a rating of at least 4.5 stars suitable for 6 people.",
+          "web": "https://www.allrecipes.com/"
+        },
+        {
+          "web_name": "Allrecipes",
+          "id": "Allrecipes--1",
+          "ques": "Find a recipe for a vegetarian lasagna that has at least a four-star rating and uses zucchini.",
+          "web": "https://www.allrecipes.com/"
+        },
+        {
+          "web_name": "Allrecipes",
           "id": "Allrecipes--2",
           "ques": "Find a recipe for a vegetarian lasagna under 600 calories per serving that has a prep time of less than 1 hour.",
           "web": "https://www.allrecipes.com/"

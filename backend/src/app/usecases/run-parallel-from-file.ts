@@ -15,6 +15,34 @@ interface ParsedContent {
 }
 
 export class RunParallelFromFile {
+  async runWorker(task: VoyagerTask, persistResultPath: string) {
+    return new Promise<void>((resolve, reject) => {
+      const workerInstance = new Worker(
+        resolvePath(__dirname, '../worker/worker.ts'),
+        {
+          workerData: { task, persistResultPath },
+          execArgv: ['-r', 'ts-node/register', '-r', 'tsconfig-paths/register'],
+        },
+      );
+
+      workerInstance.on('message', (msg) => {
+        console.log(`Task ${msg.taskId} completed successfully`);
+        resolve();
+      });
+
+      workerInstance.on('error', (err) => {
+        console.error(`Error in worker: ${err.message}`);
+        reject(err);
+      });
+
+      workerInstance.on('exit', (code) => {
+        if (code !== 0) {
+          reject(new Error(`Worker stopped with exit code ${code}`));
+        }
+      });
+    });
+  }
+
   async execute(filePath: string) {
     let fileContent: string;
 
@@ -43,35 +71,10 @@ export class RunParallelFromFile {
         await Promise.race(workers); // Wait for one worker to complete before spawning another
       }
 
-      const worker = new Promise<void>((resolve, reject) => {
-        const workerInstance = new Worker(
-          resolvePath(__dirname, '../worker/worker.ts'),
-          {
-            workerData: { task: testCase, persistResultPath },
-            execArgv: [
-              '-r',
-              'ts-node/register',
-              '-r',
-              'tsconfig-paths/register',
-            ],
-          },
-        );
+      const worker = this.runWorker(testCase, persistResultPath);
 
-        workerInstance.on('message', (msg) => {
-          console.log(`Task ${msg.taskId} completed successfully`);
-          resolve();
-        });
-
-        workerInstance.on('error', (err) => {
-          console.error(`Error in worker: ${err.message}`);
-          reject(err);
-        });
-
-        workerInstance.on('exit', (code) => {
-          if (code !== 0) {
-            reject(new Error(`Worker stopped with exit code ${code}`));
-          }
-        });
+      worker.then(() => {
+        workers.splice(workers.indexOf(worker), 1);
       });
 
       console.log('Spawning worker', index);
