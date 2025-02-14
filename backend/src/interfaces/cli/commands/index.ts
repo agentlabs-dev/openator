@@ -15,19 +15,24 @@ if (!process.env.OPENAI_API_KEY) {
 
 export const bench = new Command('run:benchmark')
   .description('Start the voyager benchmark')
-  .option('-f --file <FILE>', 'The file containing the webvoyager test cases')
+  .option('--file <file>', 'The file containing the webvoyager test cases')
   .option(
-    '-w --web <WEBSITE>',
-    'The web_nameto run the benchmark on (e.g. Allrecipes, Amazon). Default to all.',
+    '--web <webName>',
+    'The web_name to run the benchmark on (e.g. Allrecipes, Amazon). Default to all.',
   )
   .option(
-    '-t --threads <THREADS>',
-    'The number of threads to run the benchmark on. Default to 6.',
+    '--threads <threads>',
+    'The number of threads to run the benchmark on.',
   )
   .option(
-    '-h --headless',
+    '--headless',
     'Whether to run the benchmark in headless mode. Default to false.',
   )
+  .option(
+    '--output <resultOutputPath>',
+    'The path to save the benchmark results. Default to eval/answers.json.',
+  )
+  .option('--id <taskId>', 'The task id to run. Default to all.')
   .action(
     async (options: {
       file?: string;
@@ -35,6 +40,7 @@ export const bench = new Command('run:benchmark')
       threads?: string;
       headless?: boolean;
       resultOutputPath?: string;
+      id?: string;
     }) => {
       const runParallelFromFile = new RunParallelFromFile();
 
@@ -51,6 +57,7 @@ export const bench = new Command('run:benchmark')
       const filePath = options.file || defaultFilePath;
       await runParallelFromFile.execute(filePath, {
         web: options.web,
+        taskId: options.id,
         threads: options.threads
           ? parseInt(options.threads)
           : DEFAULT_THREAD_COUNT,

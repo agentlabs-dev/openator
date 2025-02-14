@@ -453,11 +453,6 @@ export class ManagerAgent {
 
         const summarized = await summarizer.perform(summarizeTask);
 
-        // action.complete(content);
-        // this.memoryLearnings.push(
-        //   `Extracted content on page ${this.browserService.getPageUrl()}: ${content}`,
-        // );
-        // Let's try by sending the summarized content to the user
         this.memoryLearnings.push(
           `Key takeways from content on page ${this.browserService.getPageUrl()}: ${summarized.takeaways}`,
         );

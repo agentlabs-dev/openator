@@ -11,6 +11,7 @@ export interface RunParallelFromFileOptions {
   threads: number;
   headless: boolean;
   resultOutputPath: string;
+  taskId?: string;
 }
 
 interface ParsedContent {
@@ -66,9 +67,21 @@ export class RunParallelFromFile {
     try {
       parsedContent = JSON.parse(fileContent) as ParsedContent;
 
+      if (!!options.web && !!options.taskId) {
+        console.warn(
+          'Options --web and --id are mutually exclusive. Using both together is likely a mistake.',
+        );
+      }
+
       if (!!options.web?.length) {
         parsedContent.tasks = parsedContent.tasks.filter(
           (task) => task.web_name === options.web,
+        );
+      }
+
+      if (!!options.taskId?.length) {
+        parsedContent.tasks = parsedContent.tasks.filter(
+          (task) => task.id === options.taskId,
         );
       }
     } catch (error: any) {

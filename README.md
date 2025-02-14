@@ -107,6 +107,8 @@ npm run openator [-- options]
 | -w, --web <WEBSITE>   | The website name to run the benchmark on (e.g., Allrecipes, Amazon). Default: Runs on all available websites. |
 | -t, --threads <THREADS> | The number of threads to run the benchmark on. Default: 1                                      |
 | -h, --headless        | Run the benchmark in headless mode. Default: false                                                |
+| -i, --id <TASK_ID>    | The task id to run. Default to all.                                                                 |
+| -o, --output <OUTPUT_PATH> | The path to save the benchmark results. Default to eval/answers.json. |
 
 ##### Example
 

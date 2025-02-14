@@ -106,7 +106,7 @@ export class AgentTask {
 
   constructor(private readonly config: AgentTaskConfig) {}
 
-  prepare(params: { images: string[]; memory: string; input: string }) {
+  prepare(params: { images?: string[]; memory?: string; input: string }) {
     this.input = params.input;
     this.images = params.images;
     this.memory = params.memory;
