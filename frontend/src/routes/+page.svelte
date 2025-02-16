@@ -9,6 +9,7 @@
     let isLoading = $state(false);
     let sessionUrl = $state<string | null>(null);
     let password = $state<string | null>(null);
+    let jobId = $state<string | null>(null);
 
     /**
      * This is a POC, we'll improve that later.
@@ -19,8 +20,9 @@
 
         sessionUrl = result.sessionUrl;
         password = result.password;
+        jobId = result.jobId;
 
-        subscribeToRunUpdates();
+        subscribeToRunUpdates(jobId);
     }
 
     const resetSession = () => {

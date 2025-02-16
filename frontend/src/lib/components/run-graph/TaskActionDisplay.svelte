@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from '@iconify/svelte';
 
-  type Action = 'fillInput' | 'clickElement' | 'goToUrl' | 'triggerSuccess' | 'triggerFailure';
+  type Action = 'fillInput' | 'clickElement' | 'goToUrl' | 'triggerResult' | 'scrollDown' | 'scrollUp';
   type Status = 'pending' | 'completed' | 'cancelled' | 'failed' | 'running';
 
   export let action: Action;
@@ -23,13 +23,17 @@
       label: 'Navigate to URL',
       icon: 'mdi:link'
     },
-    triggerSuccess: {
-      label: 'Ask for evaluation',
+    triggerResult: {
+      label: 'Completed',
       icon: 'mdi:check'
     },
-    triggerFailure: {
-      label: 'Ask for evaluation',
-      icon: 'mdi:close'
+    scrollDown: {
+      label: 'Scroll down',
+      icon: 'mdi:mouse-move-down'
+    },
+    scrollUp: {
+      label: 'Scroll up',
+      icon: 'mdi:mouse-move-up'
     }
   }
 

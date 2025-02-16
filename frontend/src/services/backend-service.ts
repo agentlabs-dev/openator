@@ -1,8 +1,8 @@
 export const triggerTestRun = async (
 	startUrl: string,
 	userStory: string
-): Promise<{ sessionUrl: string; password: string }> => {
-	const response = await fetch('http://localhost:3000/jobs/test.run', {
+): Promise<{ sessionUrl: string; password: string; jobId: string }> => {
+	const response = await fetch('http://localhost:3000/jobs/start', {
 		headers: {
 			'Content-Type': 'application/json'
 		},

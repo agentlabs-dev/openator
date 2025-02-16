@@ -17,8 +17,8 @@ export class Run {
   private _brainState: RunBrainState;
   private _resultReason: string;
 
-  constructor() {
-    this.id = crypto.randomUUID();
+  constructor(jobId?: string) {
+    this.id = jobId || crypto.randomUUID();
     this._status = 'running';
     this._tasks = [];
     this._brainState = 'thinking';
@@ -41,8 +41,8 @@ export class Run {
     return this._resultReason;
   }
 
-  static InitRunning() {
-    return new Run();
+  static InitRunning(jobId?: string) {
+    return new Run(jobId);
   }
 
   think() {

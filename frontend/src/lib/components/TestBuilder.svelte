@@ -26,17 +26,17 @@
     }
 
     const promptCards = [
-        { startUrl: 'https://www.amazon.com', scenario: 'As a user on Amazon, when I search for "laptop", I should see a list of laptops or related products.' },
-        { startUrl: 'https://www.ebay.com', scenario: 'As a user on eBay, when I search for "phone", I should see a list of phones or related products.' },
-        { startUrl: 'https://www.wikipedia.com', scenario: 'As a user on Wikipedia, when I search for "Napoléon Bonaparte", I should find the biography of Napoléon Bonaparte.' },
-        { startUrl: 'https://www.allrecipes.com', scenario: 'As a user I can search for recipes and open the recipe to see more details.' }
+        { startUrl: 'https://www.amazon.com', scenario: 'Find a stainless steel kitchen sink with double bowls on Amazon.' },
+        { startUrl: 'https://www.opentable.fr', scenario: 'Find me a sushi restaurant in Paris available for 2 people in the next 2 weeks.' },
+        { startUrl: 'https://www.wikipedia.com', scenario: 'Find informations about Napoleon Bonaparte on wikipedia.' },
+        { startUrl: 'https://www.allrecipes.com', scenario: 'Find the recipe of vegetarian lasagna with a minimum of 200 ratings.' }
     ];
 </script>
 
 <div class="h-full w-3xl mx-auto flex flex-col justify-center">
     <div class="flex flex-col space-y-5 py-10">        
         <div class="mb-10">
-            <h1 class="text-2xl font-semibold text-center">What do you want me to test?</h1>
+            <h1 class="text-4xl font-semibold text-center">Openator</h1>
         </div>
 
         <div class="grid grid-cols-2 gap-4">

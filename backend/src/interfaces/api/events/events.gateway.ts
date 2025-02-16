@@ -25,7 +25,11 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('subscribe')
   async handleMessage(@MessageBody() data: void) {
     socketEventBus.on('run:update', (run) => {
-      this.server.emit('runData', RunAdapter.toFrontend(run));
+      if (!run) {
+        return;
+      }
+
+      this.server.emit(`run:update:${run.id}`, run);
     });
   }
 }

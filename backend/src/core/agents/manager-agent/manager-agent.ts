@@ -20,7 +20,6 @@ import { VariableString } from '@/core/entities/variable-string';
 import { Run } from '@/core/entities/run';
 import { EventBusInterface } from '@/core/interfaces/event-bus.interface';
 import { FeedbackAgent } from '../feedback-agent/feedback-agent';
-import { flowAnalyst, flowAnalystTask } from '../flow-analyst/flow-analyst';
 import { summarizer, summarizeTask } from '../summarize-agent/summarize-agent';
 
 export type ManagerAgentConfig = {
@@ -119,7 +118,11 @@ export class ManagerAgent {
     return this.isSuccess || this.isFailure;
   }
 
-  async launch(startUrl: string, initialPrompt: string): Promise<TestResult> {
+  async launch(
+    startUrl: string,
+    initialPrompt: string,
+    jobId?: string,
+  ): Promise<TestResult> {
     const vStartUrl = new VariableString(startUrl, this.variables);
 
     await this.browserService.launch(vStartUrl.dangerousValue());
@@ -128,18 +131,19 @@ export class ManagerAgent {
 
     this.taskManager.setEndGoal(vInitialPrompt.publicValue());
 
-    return this.run();
+    return this.run(jobId);
   }
 
   private async emitRunUpdate() {
     this.eventBus.emit('run:update', this.currentRun);
   }
 
-  async run(): Promise<TestResult> {
+  async run(jobId?: string): Promise<TestResult> {
     return new Promise(async (resolve) => {
       this.reporter.loading('Starting manager agent');
 
-      this.currentRun = Run.InitRunning();
+      this.currentRun = Run.InitRunning(jobId);
+
       this.emitRunUpdate();
 
       while (!this.isCompleted) {
@@ -158,18 +162,6 @@ export class ManagerAgent {
         this.incrementStepCount();
 
         this.reporter.loading('Defining next task...');
-
-        flowAnalystTask.prepare({
-          images: [],
-          memory: '',
-          input: `
-            # Task history:
-            ${this.taskManager.getTaskHistorySummary()}
-          `,
-        });
-
-        // const result = await flowAnalyst.perform(flowAnalystTask);
-        // console.log('FLOW ANALYST RESULT', result);
 
         const task = await this.defineNextTask();
 

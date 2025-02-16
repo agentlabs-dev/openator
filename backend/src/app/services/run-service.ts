@@ -16,6 +16,7 @@ import { OraReporter } from '@/infra/services/ora-reporter';
 import { PlaywrightScreenshoter } from '@/infra/services/playwright-screenshotter';
 import { PersistResultService, TaskResult } from './persist-result';
 import { VoyagerTask } from '../types/voyager-task';
+import { Job } from '@/core/entities/job';
 
 export type RunVoyagerTaskOptions = {
   headless: boolean;
@@ -24,6 +25,35 @@ export type RunVoyagerTaskOptions = {
 
 export class RunService {
   constructor() {}
+
+  async runJob(job: Job, eventBus: EventBus, options: { headless: boolean }) {
+    const { id, startUrl, scenario } = job;
+
+    const fileSystem = new InMemoryFileSystem();
+    const screenshotService = new PlaywrightScreenshoter(fileSystem);
+    const browser = new ChromiumBrowser();
+
+    const llm = new OpenAI4o();
+
+    const managerAgent = new ManagerAgent({
+      variables: [],
+      feedbackAgent: new FeedbackAgent(llm),
+      taskManager: new TaskManagerService(),
+      domService: new DomService(screenshotService, browser, eventBus),
+      browserService: browser,
+      llmService: llm,
+      reporter: new OraReporter('Manager Agent'),
+      maxActionsPerTask: DEFAULT_AGENT_MAX_ACTIONS_PER_TASK,
+      maxRetries: DEFAULT_AGENT_MAX_RETRIES,
+      eventBus,
+    });
+
+    const result = await managerAgent.launch(startUrl, scenario, id);
+
+    browser.close();
+
+    return result;
+  }
 
   async runVoyagerTask(task: VoyagerTask, options: RunVoyagerTaskOptions) {
     const {
