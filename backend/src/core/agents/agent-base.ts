@@ -44,15 +44,23 @@ export class Agent<ResponseType> {
 
   private getSystemPrompt() {
     return `
-      You are a ${this.role}
+    # Role
+    You are a ${this.role}
 
-      ${this.backstory}
+    # Backstory
+    ${this.backstory}
 
-      ${this.goal}
+    # Goal
+    ${this.goal}
 
-      ${this.tools}
+    # Tools
+    ${this.tools}
 
-      ${this.strictJsonOutput ? 'IMPORTANT: your output must always be a valid JSON object.' : ''}
+    # Strict JSON Output
+    ${this.strictJsonOutput ? 'IMPORTANT: your output must always be a valid JSON object.' : ''}
+
+    # Currente date is:
+    ${new Date().toISOString()}
     `;
   }
 

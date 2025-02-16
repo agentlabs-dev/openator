@@ -16,6 +16,9 @@ import { OraReporter } from '@/infra/services/ora-reporter';
 import { PlaywrightScreenshoter } from '@/infra/services/playwright-screenshotter';
 import { PersistResultService, TaskResult } from './persist-result';
 import { VoyagerTask } from '../types/voyager-task';
+import { BrowserAgent } from '@/core/agents/browser-agent/browser-agent';
+import { initStrategist } from '@/core/agents/user-journey-strategist/user-journey-strategist';
+import { Team } from '@/core/agents/team';
 
 export type RunVoyagerTaskOptions = {
   headless: boolean;
@@ -103,6 +106,58 @@ export class RunService {
       eval_result: evalResult.result,
       eval_reason: evalResult.explanation,
     };
+
+    if (options.resultOutputPath) {
+      const persistResultService = new PersistResultService(
+        options.resultOutputPath,
+      );
+      persistResultService.storeResult(taskResult);
+    }
+  }
+
+  async runVoyagerTaskV2(task: VoyagerTask, options: RunVoyagerTaskOptions) {
+    const {
+      web: startUrl,
+      ques: userStory,
+      web_name: webName,
+      id: taskId,
+    } = task;
+
+    const llm = new OpenAI4o();
+
+    console.log('--------------------------------');
+    console.log(`TEST ${webName} - ${taskId}`);
+    console.log('--------------------------------');
+
+    const team = new Team(startUrl, userStory);
+
+    const startTime = new Date();
+    const answer = await team.kickoff();
+    const endTime = new Date();
+    const durationSeconds = (endTime.getTime() - startTime.getTime()) / 1000;
+
+    // const evalResult = await new EvaluationAgent(llm).evaluate({
+    //   screenshotUrls: [],
+    //   task: userStory,
+    //   answer,
+    //   memory: '',
+    // });
+
+    const taskResult: TaskResult = {
+      web_name: webName,
+      task_id: taskId,
+      task_prompt: userStory,
+      web: startUrl,
+      result: answer,
+      step_count: 0,
+      start_time: startTime,
+      end_time: endTime,
+      duration_seconds: durationSeconds,
+      eval_result: 'unknown',
+      eval_reason: 'disabled',
+    };
+
+    console.log('taskResult', taskResult);
 
     if (options.resultOutputPath) {
       const persistResultService = new PersistResultService(

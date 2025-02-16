@@ -256,8 +256,6 @@ export class ManagerAgentHumanPrompt {
     USER TASK AND TASK HISTORY: ${serializedTasks}
     `;
 
-    console.log('USER MESSAGE', textPrompt);
-
     return new HumanMessage({
       content: [
         {

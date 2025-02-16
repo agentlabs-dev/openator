@@ -6,6 +6,10 @@ export class TaskManagerService {
 
   constructor() {}
 
+  clear() {
+    this.tasks = [];
+  }
+
   setEndGoal(endGoal: string) {
     this.endGoal = endGoal;
   }

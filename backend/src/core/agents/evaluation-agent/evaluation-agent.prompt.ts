@@ -39,6 +39,10 @@ export class EvaluationAgentSystemPrompt {
 
     Example 4:
     { "result": "unknown", "explanation": "The agent did provide a summary but from the screenshot, we cannot know if it is correct or not." }
+
+
+    Current date: ${new Date().toISOString()}
+    
     `;
   }
 
