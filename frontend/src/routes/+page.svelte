@@ -3,6 +3,8 @@
     import { startJob } from "../services/backend-service";
 	import { goto } from "$app/navigation";
 	import { ViewJobRoute } from "$lib/routes";
+	import { readAndListenJob } from "$lib/usecases/listen-job";
+	import { setChatJob } from "$lib/stores/chat";
 
 
     let isLoading = $state(false);
@@ -17,6 +19,8 @@
         const result = await startJob(startUrl, scenario);    
 
         jobId = result.jobId;
+        setChatJob(result);
+        await readAndListenJob(jobId);
         goto(ViewJobRoute.path(jobId));
     }
 </script>

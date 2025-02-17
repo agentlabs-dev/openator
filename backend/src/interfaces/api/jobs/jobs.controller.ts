@@ -17,7 +17,7 @@ export class JobsController {
      */
     const { jobId, sessionId, liveUrl } = await runJobUsecase.execute(
       body.startUrl,
-      body.userStory,
+      body.scenario,
       socketEventBus,
     );
 
@@ -25,6 +25,7 @@ export class JobsController {
       jobId,
       sessionId,
       liveUrl,
+      scenario: body.scenario,
     };
   }
 }

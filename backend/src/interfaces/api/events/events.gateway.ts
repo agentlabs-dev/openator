@@ -23,7 +23,6 @@ export class EventsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('job:subscribe')
   async handleMessage(@MessageBody() data: void) {
-    console.log('job:subscribe', data);
     socketEventBus.on('run:update', (run) => {
       if (!run) {
         return;

@@ -6,13 +6,13 @@ export type StartJobResponse = {
 	liveUrl: string;
 };
 
-export const startJob = async (startUrl: string, userStory: string): Promise<StartJobResponse> => {
+export const startJob = async (startUrl: string, scenario: string): Promise<StartJobResponse> => {
 	const response = await fetch('http://localhost:3000/jobs/start', {
 		headers: {
 			'Content-Type': 'application/json'
 		},
 		method: 'POST',
-		body: JSON.stringify({ userStory, startUrl })
+		body: JSON.stringify({ scenario, startUrl })
 	});
 
 	return response.json();

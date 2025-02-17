@@ -5,7 +5,7 @@ export type Job = {
 	liveUrl: string;
 	sessionId: string;
 	status: 'pending' | 'running' | 'completed' | 'failed';
-	message: string;
+	scenario: string;
 	tasks: Task[];
 	brainState: 'thinking' | 'executingAction';
 	resultReason: string;

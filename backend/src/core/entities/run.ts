@@ -18,7 +18,10 @@ export class Run {
   private _resultReason: string;
   private _result: string;
 
-  constructor(jobId?: string) {
+  constructor(
+    public readonly scenario: string,
+    jobId?: string,
+  ) {
     this.id = jobId || crypto.randomUUID();
     this._status = 'running';
     this._tasks = [];
@@ -47,8 +50,8 @@ export class Run {
     return this._result;
   }
 
-  static InitRunning(jobId?: string) {
-    return new Run(jobId);
+  static InitRunning(scenario: string, jobId?: string) {
+    return new Run(scenario, jobId);
   }
 
   think() {

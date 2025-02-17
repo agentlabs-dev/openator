@@ -3,6 +3,7 @@ import { TaskAdapter } from './task-adapter';
 
 export class RunAdapter {
   static toFrontend(run: Run) {
+    console.log('run', run);
     return {
       id: run.id,
       status: run.status,
@@ -10,6 +11,7 @@ export class RunAdapter {
       brainState: run.brainState,
       resultReason: run.resultReason,
       result: run.result,
+      scenario: run.scenario,
     };
   }
 }

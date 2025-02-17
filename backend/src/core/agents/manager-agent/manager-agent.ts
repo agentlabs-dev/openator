@@ -146,7 +146,7 @@ export class ManagerAgent {
     return new Promise(async (resolve) => {
       this.reporter.loading('Starting manager agent');
 
-      this.currentRun = Run.InitRunning(jobId);
+      this.currentRun = Run.InitRunning(this.taskManager.getEndGoal(), jobId);
 
       this.emitRunUpdate();
 
@@ -212,7 +212,6 @@ export class ManagerAgent {
    * TODO: fix this
    */
   private async didDomStateChange() {
-    return false;
     const { domStateHash: currentDomStateHash } =
       await this.domService.getInteractiveElements(false);
 

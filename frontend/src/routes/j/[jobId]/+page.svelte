@@ -19,7 +19,7 @@
 <div class="min-h-screen flex flex-col gap-4">
     <div class="flex flex-row min-h-full">
         <div class="min-w-[500px] max-w-[500px] flex flex-col gap-4 justify-start items-center shrink-0 bg-white p-4 overflow-y-auto h-full border-r border-gray-200">
-            <UserMessage message="You want to do this and that and this and that and this is bad really" />
+            <UserMessage message={$chatStore.job?.scenario ?? '...'} />
             <SystemMessage message="Let's accomplish this task, you can consider it done. 🎉" />
             <RunGraph job={$chatStore.job ?? null} />
             {#if $chatStore.job?.result}
