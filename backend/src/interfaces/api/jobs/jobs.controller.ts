@@ -22,7 +22,6 @@ export class JobsController {
     );
 
     return {
-      password: 'secret',
       jobId,
       sessionId,
       liveUrl,

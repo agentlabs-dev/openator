@@ -53,6 +53,7 @@ export class RunJobUsecase {
         wsEndpoint: session.wsEndpoint,
         sessionId: session.id,
         liveUrl: session.liveUrl,
+        status: 'pending',
       },
       eventBus,
     );

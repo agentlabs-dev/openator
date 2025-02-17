@@ -82,12 +82,16 @@ export class ManagerAgent {
     this.reporter.success(`Manager agent completed successfully: ${result}`);
     this.isSuccess = true;
     this.result = result;
+    this.currentRun.setSuccess(result);
+    this.emitRunUpdate();
   }
 
   private onFailure(reason: string) {
     this.reporter.failure(`Manager agent failed: ${reason}`);
     this.isFailure = true;
     this.reason = reason;
+    this.currentRun.setFailure(reason);
+    this.emitRunUpdate();
   }
 
   private async beforeAction(action: TaskAction) {

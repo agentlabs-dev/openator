@@ -1,5 +1,5 @@
-export const ViewConversationRoute = {
-	path: (id: string) => `/c/${id}`
+export const ViewJobRoute = {
+	path: (id: string) => `/j/${id}`
 };
 
 export const NewConversationRoute = {

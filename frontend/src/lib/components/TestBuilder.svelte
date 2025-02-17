@@ -1,7 +1,11 @@
 <script lang="ts">
     import BuiltinPromptCard from "$lib/components/BuiltinPromptCard.svelte";
+	import RunningSpinner from "./RunningSpinner.svelte";
 
-    let { onTriggerRun } = $props();
+    let { onTriggerRun, isGenerating = $bindable() } = $props<{ 
+        onTriggerRun: (data: { startUrl: string, scenario: string }) => void,
+        isGenerating: boolean,
+    }>();
 
     let formData = $state({
         scenario: '',
@@ -29,7 +33,7 @@
         { startUrl: 'https://www.amazon.com', scenario: 'Find a stainless steel kitchen sink with double bowls on Amazon.' },
         { startUrl: 'https://www.opentable.fr', scenario: 'Find me a sushi restaurant in Paris available for 2 people in the next 2 weeks.' },
         { startUrl: 'https://www.wikipedia.com', scenario: 'Find informations about Napoleon Bonaparte on wikipedia.' },
-        { startUrl: 'https://www.allrecipes.com', scenario: 'Find the recipe of vegetarian lasagna with a minimum of 200 ratings.' }
+        { startUrl: 'https://www.allrecipes.com', scenario: 'Find the recipe of vegetarian lasagna with a minimum of 200 ratings' }
     ];
 </script>
 
@@ -56,12 +60,16 @@
             </textarea>
 
             <div class="flex justify-end pb-2">
-                <button disabled={!isValidForm} on:click={() => triggerRun() } aria-label="Generate" class="bg-gray-900 text-white px-4 py-2 rounded-full cursor-pointer hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 17a1 1 0 01-1-1V5.414L5.707 8.707a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L11 5.414V16a1 1 0 01-1 1z" clip-rule="evenodd" />
-                    </svg>
+                <button disabled={!isValidForm || isGenerating} on:click={() => triggerRun() } aria-label="Generate" class="bg-gray-900 text-white px-4 py-2 rounded-full cursor-pointer hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                    {#if isGenerating}
+                        <RunningSpinner />
+                    {:else}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 17a1 1 0 01-1-1V5.414L5.707 8.707a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L11 5.414V16a1 1 0 01-1 1z" clip-rule="evenodd" />
+                        </svg>
+                    {/if}
                 </button>
             </div>
         </div>
-    </div>       
+    </div>    
 </div>

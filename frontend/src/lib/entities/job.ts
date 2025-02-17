@@ -1,11 +1,13 @@
 import type { Task } from '$lib/entities/task';
 
-export type Run = {
+export type Job = {
 	id: string;
+	liveUrl: string;
+	sessionId: string;
 	status: 'pending' | 'running' | 'completed' | 'failed';
-	progress: number;
 	message: string;
 	tasks: Task[];
 	brainState: 'thinking' | 'executingAction';
 	resultReason: string;
+	result: string;
 };

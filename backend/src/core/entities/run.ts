@@ -16,6 +16,7 @@ export class Run {
   private _retries: number;
   private _brainState: RunBrainState;
   private _resultReason: string;
+  private _result: string;
 
   constructor(jobId?: string) {
     this.id = jobId || crypto.randomUUID();
@@ -23,6 +24,7 @@ export class Run {
     this._tasks = [];
     this._brainState = 'thinking';
     this._resultReason = '';
+    this._result = '';
   }
 
   get status() {
@@ -39,6 +41,10 @@ export class Run {
 
   get resultReason() {
     return this._resultReason;
+  }
+
+  get result() {
+    return this._result;
   }
 
   static InitRunning(jobId?: string) {
@@ -69,9 +75,9 @@ export class Run {
     this._tasks = this._tasks.map((t) => (t.id === task.id ? task : t));
   }
 
-  setSuccess(reason: string) {
+  setSuccess(answer: string) {
     this._status = 'completed';
-    this._resultReason = reason;
+    this._result = answer;
   }
 
   setFailure(reason: string) {

@@ -42,6 +42,8 @@ services:
       - /app/node_modules
 
   frontend:
+    depends_on:
+      - backend
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev

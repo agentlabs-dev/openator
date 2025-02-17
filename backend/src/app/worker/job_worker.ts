@@ -15,7 +15,14 @@ export const main = async () => {
     eventBus.on('run:update', (data) => {
       parentPort?.postMessage({
         type: 'run:update',
-        data: RunAdapter.toFrontend(data),
+        data: {
+          ...RunAdapter.toFrontend(data),
+          jobId: job.id,
+          sessionId: job.sessionId,
+          wsEndpoint: job.wsEndpoint,
+          startUrl: job.startUrl,
+          liveUrl: job.liveUrl,
+        },
       });
     });
 

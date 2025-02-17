@@ -12,7 +12,7 @@
   <div class="flex overflow-hidden w-full pl-4">
     <div class={`flex flex-col`}>
       <div class="flex mb-1">
-        <ActionDisplay title={task.description} />
+        <ActionDisplay title={task.description} isRunning={task.status === 'running'} />
       </div>
       {#if showActions}
         <div class="flex flex-col">
