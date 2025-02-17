@@ -26,12 +26,15 @@ export type RunVoyagerTaskOptions = {
 export class RunService {
   constructor() {}
 
-  async runJob(job: Job, eventBus: EventBus, options: { headless: boolean }) {
-    const { id, startUrl, scenario } = job;
+  async runJob(job: Job, eventBus: EventBus) {
+    const { id, startUrl, scenario, wsEndpoint } = job;
 
     const fileSystem = new InMemoryFileSystem();
     const screenshotService = new PlaywrightScreenshoter(fileSystem);
-    const browser = new ChromiumBrowser();
+    const browser = new ChromiumBrowser({
+      wsEndpoint,
+      headless: true,
+    });
 
     const llm = new OpenAI4o();
 

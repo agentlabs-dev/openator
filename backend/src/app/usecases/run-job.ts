@@ -2,8 +2,7 @@ import { Worker } from 'worker_threads';
 import { EventBus } from '@/core/services/realtime-reporter';
 import { Job } from '@/core/entities/job';
 import { resolve as resolvePath } from 'path';
-import { RunAdapter } from '@/interfaces/api/adapters/run-adapter';
-import { Run } from '@/core/entities/run';
+import { HyperBrowserServer } from '@/infra/services/hyperbrowser-server';
 
 export class RunJobUsecase {
   constructor() {}
@@ -13,7 +12,7 @@ export class RunJobUsecase {
       const workerInstance = new Worker(
         resolvePath(__dirname, '../worker/job_worker'),
         {
-          workerData: { job, options: { headless: false } },
+          workerData: { job },
           execArgv: ['-r', 'ts-node/register', '-r', 'tsconfig-paths/register'],
         },
       );
@@ -43,15 +42,21 @@ export class RunJobUsecase {
   async execute(startUrl: string, scenario: string, eventBus: EventBus) {
     const jobId = crypto.randomUUID();
 
+    const hyperBrowserServer = new HyperBrowserServer();
+    const session = await hyperBrowserServer.startSession();
+
     this.runWorker(
       {
         id: jobId,
         startUrl,
         scenario,
+        wsEndpoint: session.wsEndpoint,
+        sessionId: session.id,
+        liveUrl: session.liveUrl,
       },
       eventBus,
     );
 
-    return jobId;
+    return { jobId, sessionId: session.id, liveUrl: session.liveUrl };
   }
 }

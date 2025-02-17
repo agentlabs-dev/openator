@@ -5,11 +5,8 @@ import { EventBus } from '@/core/services/realtime-reporter';
 import { RunAdapter } from '@/interfaces/api/adapters/run-adapter';
 
 export const main = async () => {
-  const { job, options } = workerData as {
+  const { job } = workerData as {
     job: Job;
-    options: {
-      headless: boolean;
-    };
   };
 
   try {
@@ -22,7 +19,7 @@ export const main = async () => {
       });
     });
 
-    await new RunService().runJob(job, eventBus, options);
+    await new RunService().runJob(job, eventBus);
   } catch (error) {
     parentPort?.postMessage({
       success: false,

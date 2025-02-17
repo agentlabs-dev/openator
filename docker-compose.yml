@@ -24,6 +24,7 @@ services:
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - PLAYWRIGHT_WS_ENDPOINT=ws://playwright:9222/ws-endpoint
+      - HYPERBROWSER_API_KEY=${HYPERBROWSER_API_KEY}
 
   frontend:
     build:

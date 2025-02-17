@@ -23,11 +23,13 @@ export class ChromiumBrowser implements Browser {
   constructor(
     private options?: {
       headless: boolean;
+      wsEndpoint?: string;
     },
   ) {}
 
   async launch(url: string) {
-    const wsEndpoint = process.env.PLAYWRIGHT_WS_ENDPOINT ?? null;
+    const wsEndpoint =
+      this.options?.wsEndpoint ?? process.env.PLAYWRIGHT_WS_ENDPOINT ?? null;
 
     let browser: PBrowser;
 
@@ -37,7 +39,7 @@ export class ChromiumBrowser implements Browser {
      * This is used in the docker-compose file where the playwright-server is running in a dedicated container.
      */
     if (wsEndpoint) {
-      browser = await chromium.connect(wsEndpoint);
+      browser = await chromium.connectOverCDP(wsEndpoint);
     } else {
       browser = await chromium.launch({
         headless: this.options.headless,

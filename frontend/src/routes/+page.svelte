@@ -1,14 +1,12 @@
 <script lang="ts">
     import TestBuilder from "$lib/components/TestBuilder.svelte";
-	import VncPlayer from "$lib/components/vnc/VNCPlayer.svelte";
-	import { triggerTestRun } from "../services/backend-service";
+    import { startJob } from "../services/backend-service";
     import {subscribeToRunUpdates, currentRunStore} from "$lib/stores/run";
     import RunGraph from "$lib/components/run-graph/RunGraph.svelte";
-	import type { Run } from "$lib/entities/run";
-	import RunResultNode from "$lib/components/run-graph/RunResultNode.svelte";
+	import LiveView from "$lib/components/LiveView.svelte";
+
     let isLoading = $state(false);
-    let sessionUrl = $state<string | null>(null);
-    let password = $state<string | null>(null);
+    let liveUrl = $state<string | null>(null);    
     let jobId = $state<string | null>(null);
 
     /**
@@ -16,30 +14,28 @@
      */
     const generate = async ({startUrl, scenario}: {startUrl: string, scenario: string}) => {
         isLoading = true;
-        const result = await triggerTestRun(startUrl, scenario);    
+        const result = await startJob(startUrl, scenario);    
 
-        sessionUrl = result.sessionUrl;
-        password = result.password;
+        liveUrl = result.liveUrl;
         jobId = result.jobId;
 
         subscribeToRunUpdates(jobId);
     }
 
     const resetSession = () => {
-        sessionUrl = null;
-        password = null;
+        liveUrl = null;
         isLoading = false;
     }
 </script>
 
 <div class="min-h-screen flex flex-col gap-4">
-    {#if sessionUrl && password}
+    {#if liveUrl}
     <div class="flex flex-row min-h-full">
-        <div class="min-w-[500px] flex flex-col justify-start items-center shrink-0 bg-[url('/images/bg-dotted.png')] p-4 overflow-y-auto h-full border-r border-gray-200">
+        <div class="min-w-[500px] flex flex-col justify-start items-center shrink-0 bg-white p-4 overflow-y-auto h-full border-r border-gray-200">
             <RunGraph run={$currentRunStore} />
         </div>
-        <div class="flex flex-col justify-center items-center p-4 bg-white grow">
-            <VncPlayer sessionUrl={sessionUrl} password={password} onDisconnect={resetSession} onConnect={() => {}}/>              
+        <div class="flex flex-col justify-center items-center p-4 bg-gray-100 grow">
+            <LiveView liveUrl={liveUrl}/>              
         </div>
     </div>            
 
