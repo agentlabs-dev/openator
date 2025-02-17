@@ -4,6 +4,8 @@
     import {subscribeToRunUpdates, currentRunStore} from "$lib/stores/run";
     import RunGraph from "$lib/components/run-graph/RunGraph.svelte";
 	import LiveView from "$lib/components/LiveView.svelte";
+	import { goto } from "$app/navigation";
+	import { ViewConversationRoute } from "$lib/routes";
 
     let isLoading = $state(false);
     let liveUrl = $state<string | null>(null);    
@@ -20,6 +22,7 @@
         jobId = result.jobId;
 
         subscribeToRunUpdates(jobId);
+        goto(ViewConversationRoute.path(jobId));
     }
 
     const resetSession = () => {
@@ -35,7 +38,7 @@
             <RunGraph run={$currentRunStore} />
         </div>
         <div class="flex flex-col justify-center items-center p-4 bg-gray-100 grow">
-            <LiveView liveUrl={liveUrl}/>              
+            <LiveView liveUrl={liveUrl}/>     
         </div>
     </div>            
 

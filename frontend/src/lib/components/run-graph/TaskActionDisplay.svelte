@@ -1,7 +1,7 @@
 <script lang="ts">
   import Icon from '@iconify/svelte';
 
-  type Action = 'fillInput' | 'clickElement' | 'goToUrl' | 'triggerResult' | 'scrollDown' | 'scrollUp';
+  type Action = 'fillInput' | 'clickElement' | 'goToUrl' | 'triggerResult' | 'scrollDown' | 'scrollUp' | 'extractContent';
   type Status = 'pending' | 'completed' | 'cancelled' | 'failed' | 'running';
 
   export let action: Action;
@@ -12,11 +12,11 @@
     icon: string
   }> = {
     fillInput: {
-      label: 'Fill input',
+      label: 'Type',
       icon: 'mdi:keyboard'
     },
     clickElement: {
-      label: 'Click element',
+      label: 'Click',
       icon: 'mdi:cursor-default-click'
     },
     goToUrl: {
@@ -34,15 +34,19 @@
     scrollUp: {
       label: 'Scroll up',
       icon: 'mdi:mouse-move-up'
+    },
+    extractContent: {
+      label: 'Extract content',
+      icon: 'mdi:text-box-multiple-outline'
     }
   }
 
   const statusColor: Record<Status, string> = {
     pending: 'text-gray-200',
-    completed: 'text-green-500',
+    completed: 'text-gray-500',
     cancelled: 'text-gray-200',
     failed: 'text-orange-500',
-    running: 'text-blue-500 animate-pulse'
+    running: 'text-gray-500 animate-pulse'
   }
 
   const actionItem = actionItems[action];

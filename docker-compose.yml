@@ -1,20 +1,28 @@
 services:
-  playwright:
-    build:
-      context: ./playwright-server
-      dockerfile: Dockerfile
-    ports:
-      - "5900:5900"       # VNC port for remote display
-      - "6080:6080"       # noVNC Web UI
-      - "9222:9222"       # WebSocket endpoint for Playwright
-    hostname: playwright
-    environment:
-      - DISPLAY=:99
-
+  # We replaced playwright-server with hyperbrowser
+  # This makes it easier to run the app on a local machine
+  # but also in a cloud environment.
+  #
+  # You can still integrate the playwright-server with a VNC player frontendside.
+  # But this is painfull :)
+  #
+  # playwright:
+  #   build:
+  #     context: ./playwright-server
+  #     dockerfile: Dockerfile.dev
+  #   ports:
+  #     - "5900:5900"       # VNC port for remote display
+  #     - "6080:6080"       # noVNC Web UI
+  #     - "9222:9222"       # WebSocket endpoint for Playwright
+  #   hostname: playwright
+  #   environment:
+  #     - DISPLAY=:99
 
   backend:
-    depends_on:
-      - playwright
+    # Uncomment this if you want to use playwright-server
+    #
+    # depends_on:
+    #   - playwright
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -31,5 +39,5 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     ports:
-      - "80:3000"
+      - "3001:3000"
     hostname: frontend
