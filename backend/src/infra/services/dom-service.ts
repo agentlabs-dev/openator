@@ -659,6 +659,19 @@ export class DomService {
         }
 
         function isTopElement(element: Element) {
+          const rect = element.getBoundingClientRect();
+
+          // Ignore elements outside viewport
+          if (rect.bottom < 0 || rect.top > window.innerHeight) return false;
+
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+
+          const topEl = document.elementFromPoint(centerX, centerY);
+          return topEl === element || element.contains(topEl);
+        }
+
+        function isTopElementOld(element: Element) {
           // Find the correct document context and root element
           let doc = element.ownerDocument;
 

@@ -2,7 +2,7 @@ import { IsString } from 'class-validator';
 
 export class RunTestDto {
   @IsString()
-  userStory: string;
+  scenario: string;
 
   @IsString()
   startUrl: string;

@@ -89,7 +89,7 @@ export class Task {
   static InitPending(goal: string, actions: ManagerAgentAction[]) {
     const taskActions = actions.map((action) => new TaskAction(action));
 
-    return new Task(crypto.randomUUID(), goal, taskActions, 'pending');
+    return new Task(crypto.randomUUID(), goal, taskActions ?? [], 'pending');
   }
 
   get status() {

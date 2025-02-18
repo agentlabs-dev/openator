@@ -1,20 +1,15 @@
+<style>
+  @keyframes sizePulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.4);
+    }
+  }
+  .animate-size {
+    animation: sizePulse 2s infinite;
+  }
+</style>
 
-
-<script lang="ts">
-  import Divider from './Divider.svelte';
-  import Card from './Card.svelte';
-  import Icon from '@iconify/svelte';
-
-  export let noTopEdge: boolean = false;
-</script>
-
-
-{#if !noTopEdge}
-  <Divider orientation="horizontal" />
-{/if}
-<Card>
-  <div class="flex flex-row items-center justify-center gap-2 p-2">
-    <Icon icon="mdi:brain" class="text-pink-500 animate-pulse text-lg"/>
-    <span class="text-sm">Thinking...</span>
-  </div>
-</Card>
+<div class="rounded-full bg-black w-3 h-3 animate-size"></div>

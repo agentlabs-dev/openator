@@ -1,27 +1,22 @@
 <script lang="ts">
-	import type { Run } from '$lib/entities/run';
+	import type { Job } from '$lib/entities/job';
   
 	import GraphNode from './GraphNode.svelte';
 	import BrainNode from './BrainNode.svelte';
-	import RunResultNode from './RunResultNode.svelte';
 
-  export let run: Run | null;
+  export let job: Job | null;
 </script>
 
-<div class="flex flex-col gap w-full">
-  {#if !!run}
-    {#each run.tasks as task, index}
-      <GraphNode task={task} noTopEdge={index === 0} noBottomEdge={index === run.tasks.length - 1 && run.brainState !== 'thinking' && run.status !== 'completed' && run.status !== 'failed'} />
-    {/each}
-  {/if}
-
-  {#if !run || run.brainState === 'thinking'}  
-    <BrainNode noTopEdge={!run || run.tasks.length === 0}></BrainNode>
-  {/if}
-
-  {#if run && run.status === 'completed'}
-    <RunResultNode status="success" reason={run.resultReason}></RunResultNode>
-  {:else if run && run.status === 'failed'}
-    <RunResultNode status="failure" reason={run.resultReason}></RunResultNode>
-  {/if}
+<div class="px-4 w-full">
+  <div class="flex flex-col gap-2 w-full border-l-4 border-gray-100">
+    {#if !!job}
+      {#each job.tasks as task, index}
+        <GraphNode task={task} showActions={task.status === 'running'} />
+      {/each}
+    {/if}
+  
+    {#if !job || job.brainState === 'thinking'}  
+      <div class="pl-4"><BrainNode></BrainNode></div>
+    {/if}
+  </div>
 </div>

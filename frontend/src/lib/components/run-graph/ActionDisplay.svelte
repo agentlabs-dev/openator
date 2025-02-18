@@ -1,12 +1,9 @@
 <script lang="ts">
   export let title: string;
+  export let isRunning: boolean = false;
 </script>
 
 
-<div class="flex items-center gap-2 justify-between w-full">
-  <div class="flex items-center gap-2 text-gray-700">
-    <div class={`flex flex-col text-sm`}>
-      <span>{title}</span>
-    </div>
-  </div>
+<div class="text-md/6 text-black antialiased {isRunning ? 'animate-pulse' : ''}">
+  {title}
 </div>
