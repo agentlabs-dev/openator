@@ -45,7 +45,7 @@ Openator is <b>fully open-sourced (Apache 2.0)</b>.
 
 ### GUI VERSION
 
-https://github.com/user-attachments/assets/98881b79-eb63-4d10-aedf-f52ad64aecd5
+https://github.com/user-attachments/assets/c197b6a3-05de-4e2d-8b61-b75668f92d6e
 
 ### CLI VERSION
 
