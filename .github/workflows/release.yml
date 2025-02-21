@@ -17,11 +17,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
-      - run: cd lib
-      - run: npm ci
-      - run: npm run build
+      - run: |
+          cd lib
+          npm ci
+          npm run build
       - name: Semantic Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx semantic-release
+        run: |
+          cd lib
+          npx semantic-release
