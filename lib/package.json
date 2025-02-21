@@ -17,7 +17,7 @@
   ],
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "build": "rollup -c",
+    "build": "npx rollup -c",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "dependencies": {
@@ -38,6 +38,7 @@
     "zod-to-json-schema": "^3.24.1"
   },
   "devDependencies": {
+    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
