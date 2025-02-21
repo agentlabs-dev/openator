@@ -11,6 +11,9 @@
   "publishConfig": {
     "access": "public"
   },
+  "resolutions": {
+    "rollup": "npm:@rollup/wasm-node@*"
+  },
   "files": [
     "dist",
     "README.md"
