@@ -43,3 +43,5 @@ coverage/
 # Ignore temporary files
 tmp/
 temp/
+
+example.ts
