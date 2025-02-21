@@ -19,7 +19,7 @@ jobs:
       - uses: actions/setup-node@v4
       - run: |
           cd lib
-          npm ci
+          npm i
           npm run build
       - name: Semantic Release
         env:
