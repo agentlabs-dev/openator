@@ -7,7 +7,7 @@
 </p>
 
 <p align=center>
-Your Open-Source Browser Operator — Openator is a state-of-the-art browser agent tool that is capable of planning and executing actions formulated in natural language.
+Openator is a state-of-the-art browser agent tool that is capable of planning and executing actions formulated in natural language.
 </p>
 
 <p align="center">
@@ -37,7 +37,7 @@ This project is under active development and any help or support is welcome.
 
 ## Quick Start
 
-Install the package and playwright using npm or yarn.
+Install the package using npm or yarn.
 
 ```bash
 npm i openator
@@ -65,7 +65,16 @@ main();
 
 ## Demo
 
-Here is what you can build with Openator, you can find more examples and source code in our main repository.
+Here is what you can build with Openator, you can find more examples and source code in our main repository. The frontend is not included but can be found in our open-source repository.
+
+Example task:
+
+```typescript
+await openator.start(
+  'https://amazon.com',
+  'Purchase a black wireless keyboard',
+);
+```
 
 <a href="#"><img src="https://github.com/agentlabs-dev/openator/blob/main/.readme/gui-demo.gif?raw=true" alt="agentlabs.dev"></a>
 

@@ -7,10 +7,12 @@
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "ts-node index.ts"
   },
   "dependencies": {
-    "openator": "^1.0.1",
+    "dotenv": "^16.4.7",
+    "openator": "^1.0.3",
     "typescript": "^5.7.3"
   }
 }

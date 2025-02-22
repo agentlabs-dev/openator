@@ -1,4 +1,5 @@
 import { initOpenator } from 'openator';
+import 'dotenv/config';
 
 const main = async () => {
   if (!process.env.OPENAI_API_KEY) {
@@ -10,7 +11,7 @@ const main = async () => {
     openAiApiKey: process.env.OPENAI_API_KEY,
   });
 
-  const result =await openator.start(
+  const result = await openator.start(
     'https://amazon.com',
     'Find a black wirelesskeyboard and return the price.',
   );
