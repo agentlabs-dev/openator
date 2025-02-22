@@ -67,7 +67,7 @@ main();
 
 Here is what you can build with Openator, you can find more examples and source code in our main repository.
 
-![Openator Demo](https://api.cloudflare.com/client/v4/accounts/b176d4f630c2d4e4a6fcf5ecc50a2e2d/images/v1/2ef38697-5e93-43ea-4289-c7d048d8bf00)
+<a href="#"><img src="https://github.com/agentlabs-dev/openator/blob/main/.readme/gui-demo.gif?raw=true" alt="agentlabs.dev"></a>
 
 ## How it works
 
