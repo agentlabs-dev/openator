@@ -127,7 +127,7 @@ export class Openator {
     return this.isSuccess || this.isFailure;
   }
 
-  async launch(
+  async start(
     startUrl: string,
     initialPrompt: string,
     jobId?: string,
@@ -147,7 +147,7 @@ export class Openator {
     this.eventBus?.emit('run:update', this.currentRun);
   }
 
-  async run(jobId?: string): Promise<OpenatorResult> {
+  private async run(jobId?: string): Promise<OpenatorResult> {
     return new Promise(async (resolve) => {
       this.reporter.loading('Starting manager agent');
 
@@ -238,7 +238,7 @@ export class Openator {
     return actions.filter((action) => action.name !== 'triggerResult');
   }
 
-  async defineNextTask(): Promise<Task> {
+  private async defineNextTask(): Promise<Task> {
     this.currentRun.think();
     this.emitRunUpdate();
 
@@ -296,7 +296,7 @@ export class Openator {
     }
   }
 
-  async executeTask(task: Task) {
+  private async executeTask(task: Task) {
     task.start();
 
     await this.domService.resetHighlightElements();

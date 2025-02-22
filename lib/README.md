@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://github.com/agentlabs-dev/openator"><img src="./.readme/cover.png" alt="Magic Inspector"></a>
+  <a href="https://github.com/agentlabs-dev/openator"><img src="https://raw.githubusercontent.com/agentlabs-dev/openator/refs/heads/main/.readme/cover.png" alt="Openator"></a>
 </p>
 
 <p align="center">
@@ -40,7 +40,7 @@ This project is under active development and any help or support is welcome.
 Install the package and playwright using npm or yarn.
 
 ```bash
-npm i openator playwright
+npm i openator
 ```
 
 Spin up your first agent with a task.
@@ -50,11 +50,11 @@ import { initOpenator } from 'openator';
 
 const main = async () => {
   const openator = initOpenator({
-    headless: true,
+    headless: false,
     openAiApiKey: process.env.OPENAI_API_KEY,
   });
 
-  await openator.launch(
+  await openator.start(
     'https://amazon.com',
     'Find a black wirelesskeyboard and return the price.',
   );
@@ -63,24 +63,16 @@ const main = async () => {
 main();
 ```
 
-## Demos
+## Demo
 
-We're also working on a web application that will allow you to interact with the agent directly. Here are some demos of what you can build with Openator.
+Here is what you can build with Openator, you can find more examples and source code in our main repository.
 
-### GUI VERSION
-
-https://github.com/user-attachments/assets/c197b6a3-05de-4e2d-8b61-b75668f92d6e
-
-### CLI VERSION
-
-Log in to my account with 'demo@magicinspector.com' and 'demopassword' and create a new test inside the Default Project. Once the test has been created, I can see the test editor.
-
-https://github.com/user-attachments/assets/7873f6a8-89d5-4234-8a17-0d993f5dc5c7
+![Openator Demo](https://api.cloudflare.com/client/v4/accounts/b176d4f630c2d4e4a6fcf5ecc50a2e2d/images/v1/2ef38697-5e93-43ea-4289-c7d048d8bf00)
 
 ## How it works
 
 <p align="center">
-  <a href="https://magicinspector.com"><img src="./.readme/how-it-works.png" alt="agentlabs.dev"></a>
+  <a href="#"><img src="https://raw.githubusercontent.com/agentlabs-dev/openator/refs/heads/main/.readme/how-it-works.png" alt="agentlabs.dev"></a>
 </p>
 
 <p align="center">
