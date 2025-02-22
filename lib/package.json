@@ -8,6 +8,11 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "homepage": "https://github.com/agentlabs-dev/openator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agentlabs-dev/openator.git"
+  },
   "publishConfig": {
     "access": "public"
   },
