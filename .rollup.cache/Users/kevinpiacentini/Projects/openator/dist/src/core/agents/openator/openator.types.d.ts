@@ -4,154 +4,154 @@ export declare const ManagerAgentActionSchema: z.ZodUnion<[z.ZodObject<{
     params: z.ZodNull;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    params?: null;
-    name?: "extractContent";
-    description?: string;
+    name: "extractContent";
+    params: null;
+    description: string;
 }, {
-    params?: null;
-    name?: "extractContent";
-    description?: string;
+    name: "extractContent";
+    params: null;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"clickElement">;
     params: z.ZodObject<{
         index: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
-        index?: number;
+        index: number;
     }, {
-        index?: number;
+        index: number;
     }>;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    params?: {
-        index?: number;
+    name: "clickElement";
+    params: {
+        index: number;
     };
-    name?: "clickElement";
-    description?: string;
+    description: string;
 }, {
-    params?: {
-        index?: number;
+    name: "clickElement";
+    params: {
+        index: number;
     };
-    name?: "clickElement";
-    description?: string;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"fillInput">;
     params: z.ZodObject<{
         index: z.ZodNumber;
         text: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        index?: number;
-        text?: string;
+        text: string;
+        index: number;
     }, {
-        index?: number;
-        text?: string;
+        text: string;
+        index: number;
     }>;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    params?: {
-        index?: number;
-        text?: string;
+    name: "fillInput";
+    params: {
+        text: string;
+        index: number;
     };
-    name?: "fillInput";
-    description?: string;
+    description: string;
 }, {
-    params?: {
-        index?: number;
-        text?: string;
+    name: "fillInput";
+    params: {
+        text: string;
+        index: number;
     };
-    name?: "fillInput";
-    description?: string;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"goBack">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    params?: null;
-    name?: "goBack";
-    description?: string;
+    name: "goBack";
+    params: null;
+    description: string;
 }, {
-    params?: null;
-    name?: "goBack";
-    description?: string;
+    name: "goBack";
+    params: null;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"scrollDown">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    params?: null;
-    name?: "scrollDown";
-    description?: string;
+    name: "scrollDown";
+    params: null;
+    description: string;
 }, {
-    params?: null;
-    name?: "scrollDown";
-    description?: string;
+    name: "scrollDown";
+    params: null;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"scrollUp">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    params?: null;
-    name?: "scrollUp";
-    description?: string;
+    name: "scrollUp";
+    params: null;
+    description: string;
 }, {
-    params?: null;
-    name?: "scrollUp";
-    description?: string;
+    name: "scrollUp";
+    params: null;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"goToUrl">;
     params: z.ZodObject<{
         url: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        url?: string;
+        url: string;
     }, {
-        url?: string;
+        url: string;
     }>;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    params?: {
-        url?: string;
+    name: "goToUrl";
+    params: {
+        url: string;
     };
-    name?: "goToUrl";
-    description?: string;
+    description: string;
 }, {
-    params?: {
-        url?: string;
+    name: "goToUrl";
+    params: {
+        url: string;
     };
-    name?: "goToUrl";
-    description?: string;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"takeScreenshot">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    params?: null;
-    name?: "takeScreenshot";
-    description?: string;
+    name: "takeScreenshot";
+    params: null;
+    description: string;
 }, {
-    params?: null;
-    name?: "takeScreenshot";
-    description?: string;
+    name: "takeScreenshot";
+    params: null;
+    description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"triggerResult">;
     params: z.ZodObject<{
         data: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        data?: string;
+        data: string;
     }, {
-        data?: string;
+        data: string;
     }>;
     description: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    params?: {
-        data?: string;
+    name: "triggerResult";
+    params: {
+        data: string;
     };
-    name?: "triggerResult";
-    description?: null;
+    description: null;
 }, {
-    params?: {
-        data?: string;
+    name: "triggerResult";
+    params: {
+        data: string;
     };
-    name?: "triggerResult";
-    description?: null;
+    description: null;
 }>]>;
 export type ManagerAgentAction = z.infer<typeof ManagerAgentActionSchema>;
 export declare const ManagerAgentResponseSchema: z.ZodObject<{
@@ -160,271 +160,271 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         memory: z.ZodString;
         nextGoal: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        evaluationPreviousGoal?: string;
-        memory?: string;
-        nextGoal?: string;
+        evaluationPreviousGoal: string;
+        memory: string;
+        nextGoal: string;
     }, {
-        evaluationPreviousGoal?: string;
-        memory?: string;
-        nextGoal?: string;
+        evaluationPreviousGoal: string;
+        memory: string;
+        nextGoal: string;
     }>;
     actions: z.ZodArray<z.ZodUnion<[z.ZodObject<{
         name: z.ZodLiteral<"extractContent">;
         params: z.ZodNull;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        params?: null;
-        name?: "extractContent";
-        description?: string;
+        name: "extractContent";
+        params: null;
+        description: string;
     }, {
-        params?: null;
-        name?: "extractContent";
-        description?: string;
+        name: "extractContent";
+        params: null;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"clickElement">;
         params: z.ZodObject<{
             index: z.ZodNumber;
         }, "strip", z.ZodTypeAny, {
-            index?: number;
+            index: number;
         }, {
-            index?: number;
+            index: number;
         }>;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        params?: {
-            index?: number;
+        name: "clickElement";
+        params: {
+            index: number;
         };
-        name?: "clickElement";
-        description?: string;
+        description: string;
     }, {
-        params?: {
-            index?: number;
+        name: "clickElement";
+        params: {
+            index: number;
         };
-        name?: "clickElement";
-        description?: string;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"fillInput">;
         params: z.ZodObject<{
             index: z.ZodNumber;
             text: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            index?: number;
-            text?: string;
+            text: string;
+            index: number;
         }, {
-            index?: number;
-            text?: string;
+            text: string;
+            index: number;
         }>;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        params?: {
-            index?: number;
-            text?: string;
+        name: "fillInput";
+        params: {
+            text: string;
+            index: number;
         };
-        name?: "fillInput";
-        description?: string;
+        description: string;
     }, {
-        params?: {
-            index?: number;
-            text?: string;
+        name: "fillInput";
+        params: {
+            text: string;
+            index: number;
         };
-        name?: "fillInput";
-        description?: string;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"goBack">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        params?: null;
-        name?: "goBack";
-        description?: string;
+        name: "goBack";
+        params: null;
+        description: string;
     }, {
-        params?: null;
-        name?: "goBack";
-        description?: string;
+        name: "goBack";
+        params: null;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"scrollDown">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        params?: null;
-        name?: "scrollDown";
-        description?: string;
+        name: "scrollDown";
+        params: null;
+        description: string;
     }, {
-        params?: null;
-        name?: "scrollDown";
-        description?: string;
+        name: "scrollDown";
+        params: null;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"scrollUp">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        params?: null;
-        name?: "scrollUp";
-        description?: string;
+        name: "scrollUp";
+        params: null;
+        description: string;
     }, {
-        params?: null;
-        name?: "scrollUp";
-        description?: string;
+        name: "scrollUp";
+        params: null;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"goToUrl">;
         params: z.ZodObject<{
             url: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            url?: string;
+            url: string;
         }, {
-            url?: string;
+            url: string;
         }>;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        params?: {
-            url?: string;
+        name: "goToUrl";
+        params: {
+            url: string;
         };
-        name?: "goToUrl";
-        description?: string;
+        description: string;
     }, {
-        params?: {
-            url?: string;
+        name: "goToUrl";
+        params: {
+            url: string;
         };
-        name?: "goToUrl";
-        description?: string;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"takeScreenshot">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        params?: null;
-        name?: "takeScreenshot";
-        description?: string;
+        name: "takeScreenshot";
+        params: null;
+        description: string;
     }, {
-        params?: null;
-        name?: "takeScreenshot";
-        description?: string;
+        name: "takeScreenshot";
+        params: null;
+        description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"triggerResult">;
         params: z.ZodObject<{
             data: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            data?: string;
+            data: string;
         }, {
-            data?: string;
+            data: string;
         }>;
         description: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        params?: {
-            data?: string;
+        name: "triggerResult";
+        params: {
+            data: string;
         };
-        name?: "triggerResult";
-        description?: null;
+        description: null;
     }, {
-        params?: {
-            data?: string;
+        name: "triggerResult";
+        params: {
+            data: string;
         };
-        name?: "triggerResult";
-        description?: null;
+        description: null;
     }>]>, "many">;
 }, "strip", z.ZodTypeAny, {
-    currentState?: {
-        evaluationPreviousGoal?: string;
-        memory?: string;
-        nextGoal?: string;
+    currentState: {
+        evaluationPreviousGoal: string;
+        memory: string;
+        nextGoal: string;
     };
-    actions?: ({
-        params?: null;
-        name?: "extractContent";
-        description?: string;
+    actions: ({
+        name: "extractContent";
+        params: null;
+        description: string;
     } | {
-        params?: {
-            index?: number;
+        name: "clickElement";
+        params: {
+            index: number;
         };
-        name?: "clickElement";
-        description?: string;
+        description: string;
     } | {
-        params?: {
-            index?: number;
-            text?: string;
+        name: "fillInput";
+        params: {
+            text: string;
+            index: number;
         };
-        name?: "fillInput";
-        description?: string;
+        description: string;
     } | {
-        params?: null;
-        name?: "goBack";
-        description?: string;
+        name: "goBack";
+        params: null;
+        description: string;
     } | {
-        params?: null;
-        name?: "scrollDown";
-        description?: string;
+        name: "scrollDown";
+        params: null;
+        description: string;
     } | {
-        params?: null;
-        name?: "scrollUp";
-        description?: string;
+        name: "scrollUp";
+        params: null;
+        description: string;
     } | {
-        params?: {
-            url?: string;
+        name: "goToUrl";
+        params: {
+            url: string;
         };
-        name?: "goToUrl";
-        description?: string;
+        description: string;
     } | {
-        params?: null;
-        name?: "takeScreenshot";
-        description?: string;
+        name: "takeScreenshot";
+        params: null;
+        description: string;
     } | {
-        params?: {
-            data?: string;
+        name: "triggerResult";
+        params: {
+            data: string;
         };
-        name?: "triggerResult";
-        description?: null;
+        description: null;
     })[];
 }, {
-    currentState?: {
-        evaluationPreviousGoal?: string;
-        memory?: string;
-        nextGoal?: string;
+    currentState: {
+        evaluationPreviousGoal: string;
+        memory: string;
+        nextGoal: string;
     };
-    actions?: ({
-        params?: null;
-        name?: "extractContent";
-        description?: string;
+    actions: ({
+        name: "extractContent";
+        params: null;
+        description: string;
     } | {
-        params?: {
-            index?: number;
+        name: "clickElement";
+        params: {
+            index: number;
         };
-        name?: "clickElement";
-        description?: string;
+        description: string;
     } | {
-        params?: {
-            index?: number;
-            text?: string;
+        name: "fillInput";
+        params: {
+            text: string;
+            index: number;
         };
-        name?: "fillInput";
-        description?: string;
+        description: string;
     } | {
-        params?: null;
-        name?: "goBack";
-        description?: string;
+        name: "goBack";
+        params: null;
+        description: string;
     } | {
-        params?: null;
-        name?: "scrollDown";
-        description?: string;
+        name: "scrollDown";
+        params: null;
+        description: string;
     } | {
-        params?: null;
-        name?: "scrollUp";
-        description?: string;
+        name: "scrollUp";
+        params: null;
+        description: string;
     } | {
-        params?: {
-            url?: string;
+        name: "goToUrl";
+        params: {
+            url: string;
         };
-        name?: "goToUrl";
-        description?: string;
+        description: string;
     } | {
-        params?: null;
-        name?: "takeScreenshot";
-        description?: string;
+        name: "takeScreenshot";
+        params: null;
+        description: string;
     } | {
-        params?: {
-            data?: string;
+        name: "triggerResult";
+        params: {
+            data: string;
         };
-        name?: "triggerResult";
-        description?: null;
+        description: null;
     })[];
 }>;
 export type ManagerResponse = z.infer<typeof ManagerAgentResponseSchema>;

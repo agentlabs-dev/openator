@@ -36,14 +36,14 @@ export class Openator {
         this.reporter.success(`Manager agent completed successfully: ${result}`);
         this.isSuccess = true;
         this.result = result;
-        this.currentRun.setSuccess(result);
+        this.currentRun?.setSuccess(result);
         this.emitRunUpdate();
     }
     onFailure(reason) {
         this.reporter.failure(`Manager agent failed: ${reason}`);
         this.isFailure = true;
         this.reason = reason;
-        this.currentRun.setFailure(reason);
+        this.currentRun?.setFailure(reason);
         this.emitRunUpdate();
     }
     async beforeAction(action) {
@@ -75,7 +75,9 @@ export class Openator {
         return this.run(jobId);
     }
     async emitRunUpdate() {
-        this.eventBus?.emit('run:update', this.currentRun);
+        if (this.currentRun) {
+            this.eventBus?.emit('run:update', this.currentRun);
+        }
     }
     async run(jobId) {
         return new Promise(async (resolve) => {
@@ -132,7 +134,7 @@ export class Openator {
         return actions.filter((action) => action.name !== 'triggerResult');
     }
     async defineNextTask() {
-        this.currentRun.think();
+        this.currentRun?.think();
         this.emitRunUpdate();
         const parser = new JsonOutputParser();
         const systemMessage = new ManagerAgentPrompt(this.maxActionsPerTask).getSystemMessage();

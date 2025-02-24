@@ -1,3 +1,4 @@
+import { Task } from '@/core/entities/task';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 export class EvaluationAgentSystemPrompt {
@@ -65,6 +66,13 @@ export class EvaluationAgentUserPrompt {
     screenshotCount,
     taskHistorySummary,
     previousTaskResult,
+  }: {
+    pageUrl: string;
+    task: string;
+    answer: string;
+    screenshotCount: number;
+    taskHistorySummary: string;
+    previousTaskResult: string;
   }) {
     return `
     CURRENT PAGE URL: ${pageUrl}

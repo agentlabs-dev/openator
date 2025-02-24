@@ -6,11 +6,11 @@ export declare class EvaluationAgentSystemPrompt {
 }
 export declare class EvaluationAgentUserPrompt {
     constructor();
-    getUserPrompt({ task, answer, screenshotCount, memory }: {
-        task: any;
-        answer: any;
-        screenshotCount: any;
-        memory: any;
+    getUserPrompt({ task, answer, screenshotCount, memory, }: {
+        screenshotCount: number;
+        task: string;
+        answer: string;
+        memory: string;
     }): string;
     getUserMessage({ screenshotUrls, task, answer, memory, }: {
         screenshotUrls: string[];

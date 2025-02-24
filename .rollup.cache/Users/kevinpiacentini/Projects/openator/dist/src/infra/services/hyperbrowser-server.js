@@ -2,7 +2,7 @@ import { Hyperbrowser } from '@hyperbrowser/sdk';
 export class HyperBrowserServer {
     constructor() {
         const apiKey = process.env.HYPERBROWSER_API_KEY;
-        if (!apiKey) {
+        if (typeof apiKey !== 'string') {
             throw new Error('HYPERBROWSER_API_KEY is not set in your environment.');
         }
         this.client = new Hyperbrowser({

@@ -86,14 +86,14 @@ export class AgentTask {
     `;
     }
     getTaskMessages() {
-        const images = this.images.map((image) => {
+        const images = this.images?.map((image) => {
             return {
                 type: 'image_url',
                 image_url: {
                     url: image,
                 },
             };
-        });
+        }) ?? [];
         return [
             new HumanMessage({
                 content: [

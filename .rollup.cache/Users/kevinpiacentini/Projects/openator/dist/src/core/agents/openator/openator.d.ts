@@ -13,11 +13,11 @@ export type OpenatorConfig = {
     maxActionsPerTask?: number;
     maxRetries?: number;
     variables: Variable[];
-    taskManager?: TaskManagerService;
-    domService?: DomService;
-    feedbackAgent?: FeedbackAgent;
-    browserService?: Browser;
-    llmService?: LLM;
+    taskManager: TaskManagerService;
+    domService: DomService;
+    feedbackAgent: FeedbackAgent;
+    browserService: Browser;
+    llmService: LLM;
     reporter: AgentReporter;
     eventBus?: EventBusInterface;
     summarizer: SummarizeAgent;

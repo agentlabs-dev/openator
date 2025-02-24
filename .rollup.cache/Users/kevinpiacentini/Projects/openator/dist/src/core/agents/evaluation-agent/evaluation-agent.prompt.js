@@ -47,7 +47,7 @@ export class EvaluationAgentSystemPrompt {
 }
 export class EvaluationAgentUserPrompt {
     constructor() { }
-    getUserPrompt({ task, answer, screenshotCount, memory }) {
+    getUserPrompt({ task, answer, screenshotCount, memory, }) {
         return `
     TASK: ${task}  
     RESULT RESPONSE: ${answer}

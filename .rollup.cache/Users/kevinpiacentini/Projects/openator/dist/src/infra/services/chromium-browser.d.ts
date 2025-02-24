@@ -13,7 +13,7 @@ export declare class ChromiumBrowser implements Browser {
     constructor(options?: {
         headless: boolean;
         wsEndpoint?: string;
-    });
+    } | undefined);
     launch(url: string): Promise<void>;
     private waitForDomContentLoaded;
     private waitMinimumPageLoadTime;

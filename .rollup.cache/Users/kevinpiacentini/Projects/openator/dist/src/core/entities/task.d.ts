@@ -16,25 +16,25 @@ export declare class TaskAction {
     asObject(): {
         id: string;
         status: TaskActionStatus;
-        reason: string;
+        reason: string | undefined;
         name: "extractContent" | "clickElement" | "fillInput" | "goBack" | "scrollDown" | "scrollUp" | "goToUrl" | "takeScreenshot" | "triggerResult";
         params: {
-            index?: number;
+            index: number;
         } | {
-            index?: number;
-            text?: string;
+            text: string;
+            index: number;
         } | {
-            url?: string;
+            url: string;
         } | {
-            data?: string;
-        };
-        description: string;
+            data: string;
+        } | null;
+        description: string | null;
     };
     objectForLLM(): {
-        description: string;
+        description: string | null;
         status: TaskActionStatus;
         result: string;
-        reason: string;
+        reason: string | undefined;
     };
 }
 export declare class Task {
@@ -46,7 +46,7 @@ export declare class Task {
     constructor(id: string, goal: string, actions: TaskAction[], _status: TaskStatus, _reason?: string | undefined);
     static InitPending(goal: string, actions: ManagerAgentAction[]): Task;
     get status(): TaskStatus;
-    get reason(): string;
+    get reason(): string | undefined;
     get pendingActions(): TaskAction[];
     get nextPendingAction(): TaskAction | null;
     completeAction(id: string): void;
@@ -58,10 +58,10 @@ export declare class Task {
     objectForLLM(): {
         goal: string;
         actionsTaken: {
-            description: string;
+            description: string | null;
             status: TaskActionStatus;
             result: string;
-            reason: string;
+            reason: string | undefined;
         }[];
     };
     serialize(): string;
@@ -71,21 +71,21 @@ export declare class Task {
         actions: {
             id: string;
             status: TaskActionStatus;
-            reason: string;
+            reason: string | undefined;
             name: "extractContent" | "clickElement" | "fillInput" | "goBack" | "scrollDown" | "scrollUp" | "goToUrl" | "takeScreenshot" | "triggerResult";
             params: {
-                index?: number;
+                index: number;
             } | {
-                index?: number;
-                text?: string;
+                text: string;
+                index: number;
             } | {
-                url?: string;
+                url: string;
             } | {
-                data?: string;
-            };
-            description: string;
+                data: string;
+            } | null;
+            description: string | null;
         }[];
         status: TaskStatus;
-        reason: string;
+        reason: string | undefined;
     };
 }

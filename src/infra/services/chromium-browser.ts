@@ -42,7 +42,7 @@ export class ChromiumBrowser implements Browser {
       browser = await chromium.connectOverCDP(wsEndpoint);
     } else {
       browser = await chromium.launch({
-        headless: this.options.headless,
+        headless: this.options?.headless ?? false,
       });
     }
 

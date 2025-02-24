@@ -7,12 +7,12 @@ export declare class EvaluationAgentSystemPrompt {
 export declare class EvaluationAgentUserPrompt {
     constructor();
     getUserPrompt({ pageUrl, task, answer, screenshotCount, taskHistorySummary, previousTaskResult, }: {
-        pageUrl: any;
-        task: any;
-        answer: any;
-        screenshotCount: any;
-        taskHistorySummary: any;
-        previousTaskResult: any;
+        pageUrl: string;
+        task: string;
+        answer: string;
+        screenshotCount: number;
+        taskHistorySummary: string;
+        previousTaskResult: string;
     }): string;
     getUserMessage({ pageUrl, screenshotUrls, task, answer, taskHistorySummary, previousTaskResult, }: {
         pageUrl: string;

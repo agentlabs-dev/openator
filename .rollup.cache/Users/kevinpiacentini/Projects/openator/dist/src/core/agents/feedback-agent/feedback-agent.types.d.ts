@@ -5,14 +5,14 @@ export declare const EvaluationResponseSchema: z.ZodObject<{
     hint: z.ZodString;
     memoryLearning: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    result?: "unknown" | "failed" | "success";
-    explanation?: string;
-    hint?: string;
-    memoryLearning?: string;
+    result: "unknown" | "failed" | "success";
+    explanation: string;
+    hint: string;
+    memoryLearning: string;
 }, {
-    result?: "unknown" | "failed" | "success";
-    explanation?: string;
-    hint?: string;
-    memoryLearning?: string;
+    result: "unknown" | "failed" | "success";
+    explanation: string;
+    hint: string;
+    memoryLearning: string;
 }>;
 export type EvaluationResponse = z.infer<typeof EvaluationResponseSchema>;

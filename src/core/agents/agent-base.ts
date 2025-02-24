@@ -101,8 +101,8 @@ export type AgentTaskConfig = {
 
 export class AgentTask {
   private input: string;
-  private images: string[];
-  private memory: string;
+  private images: string[] | undefined;
+  private memory: string | undefined;
 
   constructor(private readonly config: AgentTaskConfig) {}
 
@@ -141,14 +141,15 @@ export class AgentTask {
   }
 
   getTaskMessages() {
-    const images = this.images.map((image) => {
-      return {
-        type: 'image_url',
-        image_url: {
-          url: image,
-        },
-      };
-    });
+    const images =
+      this.images?.map((image) => {
+        return {
+          type: 'image_url',
+          image_url: {
+            url: image,
+          },
+        };
+      }) ?? [];
 
     return [
       new HumanMessage({

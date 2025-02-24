@@ -25,11 +25,11 @@ export type OpenatorConfig = {
   maxRetries?: number;
   variables: Variable[];
 
-  taskManager?: TaskManagerService;
-  domService?: DomService;
-  feedbackAgent?: FeedbackAgent;
-  browserService?: Browser;
-  llmService?: LLM;
+  taskManager: TaskManagerService;
+  domService: DomService;
+  feedbackAgent: FeedbackAgent;
+  browserService: Browser;
+  llmService: LLM;
   reporter: AgentReporter;
   eventBus?: EventBusInterface;
   /** TODO: replace this experimental agent */
@@ -87,7 +87,7 @@ export class Openator {
     this.reporter.success(`Manager agent completed successfully: ${result}`);
     this.isSuccess = true;
     this.result = result;
-    this.currentRun.setSuccess(result);
+    this.currentRun?.setSuccess(result);
     this.emitRunUpdate();
   }
 
@@ -95,7 +95,7 @@ export class Openator {
     this.reporter.failure(`Manager agent failed: ${reason}`);
     this.isFailure = true;
     this.reason = reason;
-    this.currentRun.setFailure(reason);
+    this.currentRun?.setFailure(reason);
     this.emitRunUpdate();
   }
 
@@ -144,7 +144,9 @@ export class Openator {
   }
 
   private async emitRunUpdate() {
-    this.eventBus?.emit('run:update', this.currentRun);
+    if (this.currentRun) {
+      this.eventBus?.emit('run:update', this.currentRun);
+    }
   }
 
   private async run(jobId?: string): Promise<OpenatorResult> {
@@ -239,7 +241,7 @@ export class Openator {
   }
 
   private async defineNextTask(): Promise<Task> {
-    this.currentRun.think();
+    this.currentRun?.think();
     this.emitRunUpdate();
 
     const parser = new JsonOutputParser<ManagerResponse>();

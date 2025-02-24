@@ -53,7 +53,7 @@ export declare class DomService {
     getInteractiveElements(withHighlight?: boolean): Promise<{
         screenshot: string;
         pristineScreenshot: string;
-        domState: DomNode;
+        domState: DomNode | null;
         selectorMap: Record<number, DomNode>;
         stringifiedDomState: string;
         domStateHash: string;

@@ -16,7 +16,7 @@ export class ChromiumBrowser {
         }
         else {
             browser = await chromium.launch({
-                headless: this.options.headless,
+                headless: this.options?.headless ?? false,
             });
         }
         this.context = await browser.newContext({
