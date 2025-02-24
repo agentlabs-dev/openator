@@ -63,7 +63,7 @@ const main = async () => {
 main();
 ```
 
-## Add Password and Variables
+## Add Secrets and Variables
 
 Optionally, you can add variables and secrets to your agent. These variables will be interpolated during runtime by the agent.
 

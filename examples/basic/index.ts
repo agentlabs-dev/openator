@@ -1,4 +1,4 @@
-import { initOpenator, Variable, LLM } from '../../dist';
+import { initOpenator, Variable } from 'openator';
 
 import 'dotenv/config';
 
