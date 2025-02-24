@@ -63,6 +63,38 @@ const main = async () => {
 main();
 ```
 
+## Add Password and Variables
+
+Optionally, you can add variables and secrets to your agent. These variables will be interpolated during runtime by the agent.
+
+This is especially helpful if you want to pass more context to the agent, such as a username and a password.
+
+```typescript
+import { initOpenator, Variable } from 'openator';
+
+const openator = initOpenator({
+  headless: false,
+  openAiApiKey: process.env.OPENAI_API_KEY,
+  variables: [
+    new Variable({
+      name: 'username',
+      value: 'my username',
+      isSecret: false,
+    }),
+    new Variable({
+      name: 'password',
+      value: process.env.PASSWORD,
+      isSecret: true,
+    }),
+  ],
+});
+
+await openator.start(
+  'https://my-website.com',
+  'Authenticate with the username {{username}} and password {{password}} and then find the latest news on the website.',
+);
+```
+
 ## Demo
 
 Here is what you can build with Openator, you can find more examples and source code in our main repository. The frontend is not included but can be found in our open-source repository.

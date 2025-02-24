@@ -1,4 +1,5 @@
 import { initOpenator } from 'openator';
+
 import 'dotenv/config';
 
 const main = async () => {
@@ -9,6 +10,13 @@ const main = async () => {
   const openator = initOpenator({
     headless: false,
     openAiApiKey: process.env.OPENAI_API_KEY,
+    variables: [
+      new Variable({
+        name: 'password',
+        value: process.env.PASSWORD,
+        isSecret: true,
+      }),
+    ],
   });
 
   const result = await openator.start(

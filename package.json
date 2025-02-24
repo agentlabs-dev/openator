@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/src/index.d.ts",
   "homepage": "https://github.com/agentlabs-dev/openator",
   "keywords": [
     "openator",
@@ -49,6 +49,7 @@
     "jsdom": "^26.0.0",
     "jsondom": "^0.4.1",
     "langchain": "^0.3.19",
+    "openator": "^1.1.0",
     "playwright": "^1.50.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
