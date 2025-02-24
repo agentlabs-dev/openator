@@ -28,6 +28,9 @@
     "build": "npx rollup -c",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "*"
+  },
   "dependencies": {
     "@hyperbrowser/sdk": "^0.30.0",
     "@mozilla/readability": "^0.5.0",
