@@ -12,6 +12,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "emitDeclarationOnly": true,
     "target": "ES2021",
     "sourceMap": true,
     "outDir": "./dist",

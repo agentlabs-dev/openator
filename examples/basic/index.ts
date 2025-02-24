@@ -1,4 +1,4 @@
-import { initOpenator } from 'openator';
+import { initOpenator, Variable, LLM } from '../../dist';
 
 import 'dotenv/config';
 
@@ -13,7 +13,7 @@ const main = async () => {
     variables: [
       new Variable({
         name: 'password',
-        value: process.env.PASSWORD,
+        value: process.env.PASSWORD!,
         isSecret: true,
       }),
     ],

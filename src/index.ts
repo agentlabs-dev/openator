@@ -6,15 +6,13 @@ import {
 } from './core/agents/summarize-agent/summarize-agent';
 import { EventBus } from './core/services/realtime-reporter';
 import { TaskManagerService } from './core/services/task-manager-service';
-import { Variable } from './core/types';
 import { ChromiumBrowser } from './infra/services/chromium-browser';
 import { ConsoleReporter } from './infra/services/console-reporter';
 import { DomService } from './infra/services/dom-service';
 import { InMemoryFileSystem } from './infra/services/in-memory-file-system';
 import { OpenAI4o } from './infra/services/openai4o';
 import { PlaywrightScreenshoter } from './infra/services/playwright-screenshotter';
-
-export * from './core/types';
+import { Variable } from './core/entities/variable';
 
 export type InitOpenatorOptions = {
   /**
@@ -72,3 +70,22 @@ export const initOpenator = (options: InitOpenatorOptions): Openator => {
     summarizeTask,
   });
 };
+
+export { Variable } from './core/entities/variable';
+export { LLM } from './core/interfaces/llm.interface';
+export { Reporter } from './core/interfaces/reporter.interface';
+export {
+  OpenatorResult,
+  OpenatorResultStatus,
+  OpenatorResultStatuses,
+} from './core/entities/openator-result';
+export { Run } from './core/entities/run';
+export {
+  ManagerAgentAction,
+  ManagerAgentResponseSchema,
+  ManagerResponse,
+  JsonifiedManagerResponseSchema,
+  ManagerResponseExamples,
+} from './core/agents/openator/openator.types';
+export { Openator, OpenatorConfig } from './core/agents/openator/openator';
+export { Task } from './core/entities/task';

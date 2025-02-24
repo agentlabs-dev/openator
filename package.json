@@ -7,7 +7,7 @@
   "license": "Apache-2.0",
   "type": "module",
   "main": "dist/index.js",
-  "types": "dist/src/index.d.ts",
+  "types": "dist/index.d.ts",
   "homepage": "https://github.com/agentlabs-dev/openator",
   "keywords": [
     "openator",

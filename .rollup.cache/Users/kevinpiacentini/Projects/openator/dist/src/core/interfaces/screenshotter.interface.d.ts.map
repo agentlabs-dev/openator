@@ -1,1 +1,0 @@
-{"version":3,"file":"screenshotter.interface.d.ts","sourceRoot":"","sources":["../../../../src/core/interfaces/screenshotter.interface.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,IAAI,EAAE,MAAM,YAAY,CAAC;AAElC,MAAM,WAAW,aAAa;IAC5B,cAAc,CAAC,IAAI,EAAE,IAAI,GAAG,OAAO,CAAC,MAAM,CAAC,CAAC;CAC7C"}

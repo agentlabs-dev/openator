@@ -24,7 +24,12 @@ const config = [
       'zod',
       'zod-to-json-schema',
     ],
-    plugins: [typescript(), json()],
+    plugins: [
+      typescript({
+        exclude: ['examples/**'],
+      }),
+      json(),
+    ],
   },
 ];
 export default config;
