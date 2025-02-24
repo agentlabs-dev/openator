@@ -1,0 +1,10 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports._HashedDocument = exports._isBaseDocumentLoader = exports._getSourceIdAssigner = exports._deduplicateInOrder = exports._batch = exports.index = void 0;
+const indexing_1 = require("@langchain/core/indexing");
+Object.defineProperty(exports, "index", { enumerable: true, get: function () { return indexing_1.index; } });
+Object.defineProperty(exports, "_batch", { enumerable: true, get: function () { return indexing_1._batch; } });
+Object.defineProperty(exports, "_deduplicateInOrder", { enumerable: true, get: function () { return indexing_1._deduplicateInOrder; } });
+Object.defineProperty(exports, "_getSourceIdAssigner", { enumerable: true, get: function () { return indexing_1._getSourceIdAssigner; } });
+Object.defineProperty(exports, "_isBaseDocumentLoader", { enumerable: true, get: function () { return indexing_1._isBaseDocumentLoader; } });
+Object.defineProperty(exports, "_HashedDocument", { enumerable: true, get: function () { return indexing_1._HashedDocument; } });

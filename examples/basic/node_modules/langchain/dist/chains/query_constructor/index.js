@@ -1,0 +1,143 @@
+import { z } from "zod";
+import { interpolateFString, FewShotPromptTemplate, } from "@langchain/core/prompts";
+import { QueryTransformer } from "./parser.js";
+import { Comparators, Operators, StructuredQuery, } from "./ir.js";
+import { DEFAULT_EXAMPLES, DEFAULT_PREFIX, DEFAULT_SCHEMA, DEFAULT_SUFFIX, EXAMPLE_PROMPT, } from "./prompt.js";
+import { AsymmetricStructuredOutputParser } from "../../output_parsers/structured.js";
+/**
+ * A simple data structure that holds information about an attribute. It
+ * is typically used to provide metadata about attributes in other classes
+ * or data structures within the LangChain framework.
+ */
+export class AttributeInfo {
+    constructor(name, type, description) {
+        Object.defineProperty(this, "name", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: name
+        });
+        Object.defineProperty(this, "type", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: type
+        });
+        Object.defineProperty(this, "description", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: description
+        });
+    }
+}
+export { QueryTransformer };
+export { DEFAULT_EXAMPLES, DEFAULT_PREFIX, DEFAULT_SCHEMA, DEFAULT_SUFFIX, EXAMPLE_PROMPT, };
+const queryInputSchema = /* #__PURE__ */ z.object({
+    query: /* #__PURE__ */ z
+        .string()
+        .describe("text string to compare to document contents"),
+    filter: /* #__PURE__ */ z
+        .string()
+        .optional()
+        .describe("logical condition statement for filtering documents"),
+});
+/**
+ * A class that extends AsymmetricStructuredOutputParser to parse
+ * structured query output.
+ */
+export class StructuredQueryOutputParser extends AsymmetricStructuredOutputParser {
+    constructor(fields) {
+        super({ ...fields, inputSchema: queryInputSchema });
+        Object.defineProperty(this, "lc_namespace", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: ["langchain", "chains", "query_constructor"]
+        });
+        Object.defineProperty(this, "queryTransformer", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        const { allowedComparators, allowedOperators } = fields;
+        this.queryTransformer = new QueryTransformer(allowedComparators, allowedOperators);
+    }
+    /**
+     * Processes the output of a structured query.
+     * @param query The query string.
+     * @param filter The filter condition.
+     * @returns A Promise that resolves to a StructuredQuery instance.
+     */
+    async outputProcessor({ query, filter, }) {
+        let myQuery = query;
+        if (myQuery.length === 0) {
+            myQuery = " ";
+        }
+        if (filter === "NO_FILTER" || filter === undefined) {
+            return new StructuredQuery(query);
+        }
+        else {
+            const parsedFilter = await this.queryTransformer.parse(filter);
+            return new StructuredQuery(query, parsedFilter);
+        }
+    }
+    /**
+     * Creates a new StructuredQueryOutputParser instance from the provided
+     * components.
+     * @param allowedComparators An array of allowed Comparator instances.
+     * @param allowedOperators An array of allowed Operator instances.
+     * @returns A new StructuredQueryOutputParser instance.
+     */
+    static fromComponents(allowedComparators = [], allowedOperators = []) {
+        return new StructuredQueryOutputParser({
+            allowedComparators,
+            allowedOperators,
+        });
+    }
+}
+export function formatAttributeInfo(info) {
+    const infoObj = info.reduce((acc, attr) => {
+        acc[attr.name] = {
+            type: attr.type,
+            description: attr.description,
+        };
+        return acc;
+    }, {});
+    return JSON.stringify(infoObj, null, 2)
+        .replaceAll("{", "{{")
+        .replaceAll("}", "}}");
+}
+const defaultExample = DEFAULT_EXAMPLES.map((EXAMPLE) => EXAMPLE);
+function _getPrompt(documentContents, attributeInfo, allowedComparators, allowedOperators, examples = defaultExample) {
+    const myAllowedComparators = allowedComparators ?? Object.values(Comparators);
+    const myAllowedOperators = allowedOperators ?? Object.values(Operators);
+    const attributeJSON = formatAttributeInfo(attributeInfo);
+    const schema = interpolateFString(DEFAULT_SCHEMA, {
+        allowed_comparators: myAllowedComparators.join(" | "),
+        allowed_operators: myAllowedOperators.join(" | "),
+    });
+    const prefix = interpolateFString(DEFAULT_PREFIX, {
+        schema,
+    });
+    const suffix = interpolateFString(DEFAULT_SUFFIX, {
+        i: examples.length + 1,
+        content: documentContents,
+        attributes: attributeJSON,
+    });
+    const outputParser = StructuredQueryOutputParser.fromComponents(allowedComparators, allowedOperators);
+    return new FewShotPromptTemplate({
+        examples,
+        examplePrompt: EXAMPLE_PROMPT,
+        inputVariables: ["query"],
+        suffix,
+        prefix,
+        outputParser,
+    });
+}
+export function loadQueryConstructorRunnable(opts) {
+    const prompt = _getPrompt(opts.documentContents, opts.attributeInfo, opts.allowedComparators, opts.allowedOperators, opts.examples);
+    const outputParser = StructuredQueryOutputParser.fromComponents(opts.allowedComparators, opts.allowedOperators);
+    return prompt.pipe(opts.llm).pipe(outputParser);
+}

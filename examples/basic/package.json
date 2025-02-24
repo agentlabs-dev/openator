@@ -14,5 +14,8 @@
     "dotenv": "^16.4.7",
     "openator": "^1.0.3",
     "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "prettier": "3.5.2"
   }
 }

@@ -1,0 +1,8 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[handlebars]": {
+    "editor.formatOnSave": false
+  },
+  "cSpell.words": ["hookform", "nextui", "Signup"]
+}

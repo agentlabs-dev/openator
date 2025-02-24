@@ -1,0 +1,3 @@
+export const DEFAULT_AGENT_MAX_RETRIES = 3;
+export const DEFAULT_AGENT_MAX_ACTIONS_PER_TASK = 4;
+//# sourceMappingURL=openator.config.js.map

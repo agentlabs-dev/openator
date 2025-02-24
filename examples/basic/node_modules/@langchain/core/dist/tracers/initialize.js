@@ -1,0 +1,31 @@
+import { LangChainTracer } from "./tracer_langchain.js";
+import { LangChainTracerV1 } from "./tracer_langchain_v1.js";
+/**
+ * @deprecated Use the V2 handler instead.
+ *
+ * Function that returns an instance of `LangChainTracerV1`. If a session
+ * is provided, it loads that session into the tracer; otherwise, it loads
+ * a default session.
+ * @param session Optional session to load into the tracer.
+ * @returns An instance of `LangChainTracerV1`.
+ */
+export async function getTracingCallbackHandler(session) {
+    const tracer = new LangChainTracerV1();
+    if (session) {
+        await tracer.loadSession(session);
+    }
+    else {
+        await tracer.loadDefaultSession();
+    }
+    return tracer;
+}
+/**
+ * @deprecated Instantiate directly using the LangChainTracer constructor.
+ *
+ * Function that returns an instance of `LangChainTracer`. It does not
+ * load any session data.
+ * @returns An instance of `LangChainTracer`.
+ */
+export async function getTracingV2CallbackHandler() {
+    return new LangChainTracer();
+}

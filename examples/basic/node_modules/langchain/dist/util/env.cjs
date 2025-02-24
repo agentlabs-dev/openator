@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.getEnvironmentVariable = exports.getRuntimeEnvironment = exports.getEnv = exports.isNode = exports.isDeno = exports.isJsDom = exports.isWebWorker = exports.isBrowser = void 0;
+var env_1 = require("@langchain/core/utils/env");
+Object.defineProperty(exports, "isBrowser", { enumerable: true, get: function () { return env_1.isBrowser; } });
+Object.defineProperty(exports, "isWebWorker", { enumerable: true, get: function () { return env_1.isWebWorker; } });
+Object.defineProperty(exports, "isJsDom", { enumerable: true, get: function () { return env_1.isJsDom; } });
+Object.defineProperty(exports, "isDeno", { enumerable: true, get: function () { return env_1.isDeno; } });
+Object.defineProperty(exports, "isNode", { enumerable: true, get: function () { return env_1.isNode; } });
+Object.defineProperty(exports, "getEnv", { enumerable: true, get: function () { return env_1.getEnv; } });
+Object.defineProperty(exports, "getRuntimeEnvironment", { enumerable: true, get: function () { return env_1.getRuntimeEnvironment; } });
+Object.defineProperty(exports, "getEnvironmentVariable", { enumerable: true, get: function () { return env_1.getEnvironmentVariable; } });

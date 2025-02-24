@@ -1,47 +1,58 @@
-# Ignore node_modules directory
-node_modules/
+# compiled output
+/dist
+/node_modules
+/build
 
-# Ignore TypeScript build outputs
-dist/
-build/
-out/
-
-# Ignore TypeScript declaration files
-*.d.ts
-
-# Ignore TypeScript cache
-*.tsbuildinfo
-
-# Output
-eval/*.json
-eval/*.png
-eval/*.jpg
-
-# Ignore logs
-logs/
+# Logs
+logs
 *.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
 
-# Ignore environment variable files
-.env
-.env.test
-.env.production
+.pakcage-lock.json
 
-# Ignore IDE specific files
-.vscode/
-.idea/
-
-# Ignore OS specific files
+# OS
 .DS_Store
-Thumbs.db
 
-# Ignore coverage reports
-coverage/
+# Tests
+/coverage
+/.nyc_output
 
-# Ignore temporary files
-tmp/
-temp/
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
-example.ts
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# temp directory
+.temp
+.tmp
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
