@@ -1,10 +1,5 @@
-import { Variable } from "./variable";
+import { Variable } from './variable';
 
-export type VariableParams = {
-  name: string;
-  value: string;
-  isSecret: boolean;
-};
 export class VariableString {
   constructor(
     private readonly _value: string,

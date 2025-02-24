@@ -13,6 +13,8 @@ import { InMemoryFileSystem } from './infra/services/in-memory-file-system';
 import { OpenAI4o } from './infra/services/openai4o';
 import { PlaywrightScreenshoter } from './infra/services/playwright-screenshotter';
 
+export * from './core/types';
+
 export type InitOpenatorOptions = {
   headless: boolean;
   openAiApiKey: string;

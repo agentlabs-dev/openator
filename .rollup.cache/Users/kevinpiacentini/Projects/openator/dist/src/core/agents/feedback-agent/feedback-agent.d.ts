@@ -10,7 +10,7 @@ export declare class FeedbackAgent {
         previousTaskResult: string;
         taskHistorySummary: string;
     }): Promise<{
-        result: "unknown" | "success" | "failed";
+        result: "unknown" | "failed" | "success";
         explanation: string;
         hint: string;
         memoryLearning: string;

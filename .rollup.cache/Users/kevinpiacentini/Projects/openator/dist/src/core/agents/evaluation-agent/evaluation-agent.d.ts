@@ -8,7 +8,7 @@ export declare class EvaluationAgent {
         answer: string;
         memory: string;
     }): Promise<{
-        result: "unknown" | "success" | "failed";
+        result: "unknown" | "failed" | "success";
         explanation: string;
     }>;
 }

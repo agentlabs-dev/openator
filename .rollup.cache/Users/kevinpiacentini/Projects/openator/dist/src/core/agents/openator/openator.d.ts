@@ -2,7 +2,7 @@ import { TaskManagerService } from '@/core/services/task-manager-service';
 import { DomService } from '@/infra/services/dom-service';
 import { Browser } from '@/core/interfaces/browser.interface';
 import { LLM } from '@/core/interfaces/llm.interface';
-import { OpenatorResult } from '@/core/entities/test-result';
+import { OpenatorResult } from '@/core/entities/openator-result';
 import { AgentReporter } from '@/core/interfaces/agent-reporter.interface';
 import { Variable } from '@/core/entities/variable';
 import { EventBusInterface } from '@/core/interfaces/event-bus.interface';

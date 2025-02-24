@@ -10,7 +10,7 @@ import { ManagerAgentAction, ManagerResponse } from './openator.types';
 import { Browser, Coordinates } from '@/core/interfaces/browser.interface';
 import { Task, TaskAction } from '@/core/entities/task';
 import { LLM } from '@/core/interfaces/llm.interface';
-import { OpenatorResult } from '@/core/entities/test-result';
+import { OpenatorResult } from '@/core/entities/openator-result';
 import { AgentReporter } from '@/core/interfaces/agent-reporter.interface';
 import { Variable } from '@/core/entities/variable';
 import { VariableString } from '@/core/entities/variable-string';

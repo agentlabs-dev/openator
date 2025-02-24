@@ -4,12 +4,12 @@ export declare const ManagerAgentActionSchema: z.ZodUnion<[z.ZodObject<{
     params: z.ZodNull;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    name: "extractContent";
     params: null;
+    name: "extractContent";
     description: string;
 }, {
-    name: "extractContent";
     params: null;
+    name: "extractContent";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"clickElement">;
@@ -22,16 +22,16 @@ export declare const ManagerAgentActionSchema: z.ZodUnion<[z.ZodObject<{
     }>;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    name: "clickElement";
     params: {
         index: number;
     };
+    name: "clickElement";
     description: string;
 }, {
-    name: "clickElement";
     params: {
         index: number;
     };
+    name: "clickElement";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"fillInput">;
@@ -47,54 +47,54 @@ export declare const ManagerAgentActionSchema: z.ZodUnion<[z.ZodObject<{
     }>;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    name: "fillInput";
     params: {
         text: string;
         index: number;
     };
+    name: "fillInput";
     description: string;
 }, {
-    name: "fillInput";
     params: {
         text: string;
         index: number;
     };
+    name: "fillInput";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"goBack">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    name: "goBack";
     params: null;
+    name: "goBack";
     description: string;
 }, {
-    name: "goBack";
     params: null;
+    name: "goBack";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"scrollDown">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    name: "scrollDown";
     params: null;
+    name: "scrollDown";
     description: string;
 }, {
-    name: "scrollDown";
     params: null;
+    name: "scrollDown";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"scrollUp">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    name: "scrollUp";
     params: null;
+    name: "scrollUp";
     description: string;
 }, {
-    name: "scrollUp";
     params: null;
+    name: "scrollUp";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"goToUrl">;
@@ -107,28 +107,28 @@ export declare const ManagerAgentActionSchema: z.ZodUnion<[z.ZodObject<{
     }>;
     description: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    name: "goToUrl";
     params: {
         url: string;
     };
+    name: "goToUrl";
     description: string;
 }, {
-    name: "goToUrl";
     params: {
         url: string;
     };
+    name: "goToUrl";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"takeScreenshot">;
     description: z.ZodString;
     params: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    name: "takeScreenshot";
     params: null;
+    name: "takeScreenshot";
     description: string;
 }, {
-    name: "takeScreenshot";
     params: null;
+    name: "takeScreenshot";
     description: string;
 }>, z.ZodObject<{
     name: z.ZodLiteral<"triggerResult">;
@@ -141,16 +141,16 @@ export declare const ManagerAgentActionSchema: z.ZodUnion<[z.ZodObject<{
     }>;
     description: z.ZodNull;
 }, "strip", z.ZodTypeAny, {
-    name: "triggerResult";
     params: {
         data: string;
     };
+    name: "triggerResult";
     description: null;
 }, {
-    name: "triggerResult";
     params: {
         data: string;
     };
+    name: "triggerResult";
     description: null;
 }>]>;
 export type ManagerAgentAction = z.infer<typeof ManagerAgentActionSchema>;
@@ -173,12 +173,12 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         params: z.ZodNull;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        name: "extractContent";
         params: null;
+        name: "extractContent";
         description: string;
     }, {
-        name: "extractContent";
         params: null;
+        name: "extractContent";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"clickElement">;
@@ -191,16 +191,16 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         }>;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        name: "clickElement";
         params: {
             index: number;
         };
+        name: "clickElement";
         description: string;
     }, {
-        name: "clickElement";
         params: {
             index: number;
         };
+        name: "clickElement";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"fillInput">;
@@ -216,54 +216,54 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         }>;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        name: "fillInput";
         params: {
             text: string;
             index: number;
         };
+        name: "fillInput";
         description: string;
     }, {
-        name: "fillInput";
         params: {
             text: string;
             index: number;
         };
+        name: "fillInput";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"goBack">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        name: "goBack";
         params: null;
+        name: "goBack";
         description: string;
     }, {
-        name: "goBack";
         params: null;
+        name: "goBack";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"scrollDown">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        name: "scrollDown";
         params: null;
+        name: "scrollDown";
         description: string;
     }, {
-        name: "scrollDown";
         params: null;
+        name: "scrollDown";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"scrollUp">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        name: "scrollUp";
         params: null;
+        name: "scrollUp";
         description: string;
     }, {
-        name: "scrollUp";
         params: null;
+        name: "scrollUp";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"goToUrl">;
@@ -276,28 +276,28 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         }>;
         description: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        name: "goToUrl";
         params: {
             url: string;
         };
+        name: "goToUrl";
         description: string;
     }, {
-        name: "goToUrl";
         params: {
             url: string;
         };
+        name: "goToUrl";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"takeScreenshot">;
         description: z.ZodString;
         params: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        name: "takeScreenshot";
         params: null;
+        name: "takeScreenshot";
         description: string;
     }, {
-        name: "takeScreenshot";
         params: null;
+        name: "takeScreenshot";
         description: string;
     }>, z.ZodObject<{
         name: z.ZodLiteral<"triggerResult">;
@@ -310,16 +310,16 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         }>;
         description: z.ZodNull;
     }, "strip", z.ZodTypeAny, {
-        name: "triggerResult";
         params: {
             data: string;
         };
+        name: "triggerResult";
         description: null;
     }, {
-        name: "triggerResult";
         params: {
             data: string;
         };
+        name: "triggerResult";
         description: null;
     }>]>, "many">;
 }, "strip", z.ZodTypeAny, {
@@ -329,49 +329,49 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         nextGoal: string;
     };
     actions: ({
-        name: "extractContent";
         params: null;
+        name: "extractContent";
         description: string;
     } | {
-        name: "clickElement";
         params: {
             index: number;
         };
+        name: "clickElement";
         description: string;
     } | {
-        name: "fillInput";
         params: {
             text: string;
             index: number;
         };
+        name: "fillInput";
         description: string;
     } | {
+        params: null;
         name: "goBack";
-        params: null;
         description: string;
     } | {
+        params: null;
         name: "scrollDown";
-        params: null;
         description: string;
     } | {
+        params: null;
         name: "scrollUp";
-        params: null;
         description: string;
     } | {
-        name: "goToUrl";
         params: {
             url: string;
         };
+        name: "goToUrl";
         description: string;
     } | {
-        name: "takeScreenshot";
         params: null;
+        name: "takeScreenshot";
         description: string;
     } | {
-        name: "triggerResult";
         params: {
             data: string;
         };
+        name: "triggerResult";
         description: null;
     })[];
 }, {
@@ -381,49 +381,49 @@ export declare const ManagerAgentResponseSchema: z.ZodObject<{
         nextGoal: string;
     };
     actions: ({
-        name: "extractContent";
         params: null;
+        name: "extractContent";
         description: string;
     } | {
-        name: "clickElement";
         params: {
             index: number;
         };
+        name: "clickElement";
         description: string;
     } | {
-        name: "fillInput";
         params: {
             text: string;
             index: number;
         };
+        name: "fillInput";
         description: string;
     } | {
+        params: null;
         name: "goBack";
-        params: null;
         description: string;
     } | {
+        params: null;
         name: "scrollDown";
-        params: null;
         description: string;
     } | {
+        params: null;
         name: "scrollUp";
-        params: null;
         description: string;
     } | {
-        name: "goToUrl";
         params: {
             url: string;
         };
+        name: "goToUrl";
         description: string;
     } | {
-        name: "takeScreenshot";
         params: null;
+        name: "takeScreenshot";
         description: string;
     } | {
-        name: "triggerResult";
         params: {
             data: string;
         };
+        name: "triggerResult";
         description: null;
     })[];
 }>;

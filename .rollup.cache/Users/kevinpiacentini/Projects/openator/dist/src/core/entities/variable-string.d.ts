@@ -1,9 +1,4 @@
-import { Variable } from "./variable";
-export type VariableParams = {
-    name: string;
-    value: string;
-    isSecret: boolean;
-};
+import { Variable } from './variable';
 export declare class VariableString {
     private readonly _value;
     private readonly variables;
