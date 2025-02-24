@@ -9,6 +9,14 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "homepage": "https://github.com/agentlabs-dev/openator",
+  "keywords": [
+    "openator",
+    "ai agent",
+    "ai",
+    "browser use",
+    "agentlabs",
+    "playwright"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/agentlabs-dev/openator.git"
