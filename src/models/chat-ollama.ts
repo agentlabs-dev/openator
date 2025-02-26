@@ -60,8 +60,6 @@ export class ChatOllama implements LLM {
   ): Promise<T> {
     const response = await this.model.invoke(messages);
 
-    console.log('response', JSON.stringify(response, null, 2));
-
     return parser.invoke(response);
   }
 }
