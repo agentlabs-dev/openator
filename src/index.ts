@@ -18,7 +18,6 @@ export {
   ManagerAgentAction,
   ManagerAgentResponseSchema,
   ManagerResponse,
-  JsonifiedManagerResponseSchema,
   ManagerResponseExamples,
 } from './core/agents/openator/openator.types';
 
@@ -34,3 +33,5 @@ export { Run } from './core/entities/run';
  * Export Chat Models
  */
 export { ChatOpenAI, ChatOpenAIConfig } from './models/chat-openai';
+export { ChatOllama, ChatOllamaConfig } from './models/chat-ollama';
+export { ChatGoogleGenAI, ChatGoogleGenAIConfig } from './models/chat-google';

@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "openator": "file:../../openator-v1.0.3.tgz"
+  }
+}

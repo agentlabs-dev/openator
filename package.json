@@ -1,7 +1,7 @@
 {
   "name": "openator",
-  "version": "v1.0.3",
-  "description": "SORA AI-browsing agent that is capable of planning and executing actions formulated in natural language.",
+  "version": "v1.2.0",
+  "description": "SOTA AI-browsing agent that is capable of planning and executing actions formulated in natural language.",
   "author": "Kevin Piacentini <kevin@agentlabs.dev>",
   "private": false,
   "license": "Apache-2.0",
@@ -42,6 +42,9 @@
   },
   "dependencies": {
     "@hyperbrowser/sdk": "^0.30.0",
+    "@langchain/google-genai": "^0.1.9",
+    "@langchain/ollama": "^0.2.0",
+    "@langchain/openai": "^0.4.4",
     "@mozilla/readability": "^0.5.0",
     "class-validator": "^0.14.1",
     "dom-to-semantic-markdown": "^1.3.0",
