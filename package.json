@@ -34,6 +34,7 @@
   "scripts": {
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "build": "npx rollup -c",
+    "buildpack": "npm run build && npm pack",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix"
   },
   "optionalDependencies": {

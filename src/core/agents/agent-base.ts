@@ -1,4 +1,3 @@
-import { OpenAI4o } from '@/infra/services/openai4o';
 import { LLM } from '../interfaces/llm.interface';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { JsonOutputParser } from '@langchain/core/output_parsers';

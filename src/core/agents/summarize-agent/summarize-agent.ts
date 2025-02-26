@@ -1,4 +1,3 @@
-import { OpenAI4o } from '@/infra/services/openai4o';
 import { Agent, AgentTask } from '../agent-base';
 import { z } from 'zod';
 import { LLM } from '@/core/interfaces/llm.interface';
@@ -9,7 +8,7 @@ const responseSchema = z.object({
 
 export type SummarizeAgent = Agent<z.infer<typeof responseSchema>>;
 
-export const initSummarizer = (openAiApiKey: string, llm: LLM) =>
+export const initSummarizer = (llm: LLM) =>
   new Agent({
     role: 'Summarizer',
     goal: 'Summarize the content provided by the user with key takeaways',
