@@ -149,7 +149,7 @@ import { ChatOpenAI } from 'openator';
 
 const llm = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
-  modelName: 'gpt-4o',
+  model: 'gpt-4o',
   temperature: 0,
   maxRetries: 3,
   maxConcurrency: 1,

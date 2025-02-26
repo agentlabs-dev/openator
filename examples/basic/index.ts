@@ -11,7 +11,7 @@ const main = async () => {
 
     const llm = new ChatOpenAI({
       apiKey: process.env.OPENAI_API_KEY,
-      modelName: 'gpt-4o',
+      model: 'gpt-4o',
       temperature: 0,
       maxRetries: 10,
       maxConcurrency: 1,

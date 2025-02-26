@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "dotenv": "^16.4.7",
-    "openator": "latest",
+    "openator": "^1.2.0",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
