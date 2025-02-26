@@ -1,27 +1,22 @@
-import { ChatOpenAI, initOpenator } from 'openator';
-
-console.log('coucou');
+import { ChatGoogleGenAI, initOpenator } from 'openator';
 
 import 'dotenv/config';
 
 const main = async () => {
-  try {
-    const llm = new ChatOpenAI({
-      apiKey: process.env.OPEN_AI_API_KEY!,
-    });
+  const llm = new ChatGoogleGenAI({
+    apiKey: process.env.GEMINI_API_KEY!,
+    model: 'gemini-1.5-flash',
+  });
 
-    const openator = initOpenator({
-      llm,
-      headless: false,
-    });
+  const openator = initOpenator({
+    llm,
+    headless: false,
+  });
 
-    const result = await openator.start(
-      'https://amazon.com',
-      'Find a black wirelesskeyboard and return the price.',
-    );
-  } catch (error) {
-    console.error(error);
-  }
+  const result = await openator.start(
+    'https://amazon.com',
+    'Find a black wirelesskeyboard and return the price.',
+  );
 };
 
 main();
