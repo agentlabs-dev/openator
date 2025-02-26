@@ -4,7 +4,6 @@ import 'dotenv/config';
 
 const main = async () => {
   try {
-    console.log('couoc');
     if (!process.env.OPENAI_API_KEY) {
       throw new Error('OPENAI_API_KEY is not set');
     }
@@ -28,8 +27,6 @@ const main = async () => {
         }),
       ],
     });
-
-    console.log('couoc');
 
     const result = await openator.start(
       'https://amazon.com',

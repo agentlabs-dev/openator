@@ -115,10 +115,6 @@ export const ManagerAgentResponseSchema = z.object({
 
 export type ManagerResponse = z.infer<typeof ManagerAgentResponseSchema>;
 
-export const JsonifiedManagerResponseSchema = JSON.stringify(
-  zodToJsonSchema(ManagerAgentResponseSchema, 'ExpectedResponseFormat'),
-);
-
 export const ManagerResponseExamples = `
 
 Example Response 1:

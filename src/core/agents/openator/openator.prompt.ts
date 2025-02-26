@@ -1,7 +1,4 @@
-import {
-  JsonifiedManagerResponseSchema,
-  ManagerResponseExamples,
-} from '@/core/agents/openator/openator.types';
+import { ManagerResponseExamples } from '@/core/agents/openator/openator.types';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 
 export class ManagerAgentPrompt {
@@ -9,10 +6,8 @@ export class ManagerAgentPrompt {
 
   importantRules() {
     return `
-  1. RESPONSE FORMAT: You must ALWAYS respond with valid JSON in this exact format:
-  
-  ${JsonifiedManagerResponseSchema}
-  
+  1. RESPONSE FORMAT: You must ALWAYS respond with valid JSON.
+    
   ${ManagerResponseExamples}
   
   2. ACTIONS: You can specify multiple actions in the list to be executed in sequence. But always specify only one action name per item.
