@@ -103,46 +103,23 @@ await openator.start(
 );
 ```
 
-## LLM Configuration
+## Available LLM Providers
 
 Optionally you can configure the LLM to use different models or configurations.
 
-Here is an example of how to customize the ChatOpenAI provider (more providers will be added soon).
+We support the following models:
+
+| Platform           | Supported models                                          | Advised model |
+| ------------------ | --------------------------------------------------------- | ------------- |
+| OpenAI             | gpt-4o, gpt-4o-mini, gpt-4-turbo                          | gpt-4o        |
+| Ollama             | qwen2.5, llama3.2                                         | -             |
+| GoogleGenerativeAI | gemini-2.0-flash, gemini-2.0-flash-lite, gemini-1.5-flash | -             |
+
+> Note that we benchmarked the performance of Openator on OpenAI gpt-4o and we recommend using it. While you can try other models, we haven't battled-tested them yet.
 
 ### OpenAIChat
 
 Here's the configuration type for the ChatOpenAI provider.
-
-```typescript
-export type ChatOpenAIConfig = {
-  /**
-   * The model to use.
-   * @default gpt-4o
-   */
-  model?: 'gpt-4o' | 'gpt-4o-mini' | 'gpt-4-turbo';
-  /**
-   * The temperature to use. We recommend setting this to 0 for consistency.
-   * @default 0
-   */
-  temperature?: number;
-  /**
-   * The maximum number of retries.
-   * This is usefull when you have a low quota such as Tier 1 or 2.
-   * @default 6
-   */
-  maxRetries?: number;
-  /**
-   * The maximum number of concurrent requests.
-   * Set it to a low value if you have a low quota such as Tier 1 or 2.
-   * @default 2
-   */
-  maxConcurrency?: number;
-  /**
-   * The OpenAI API key to use
-   */
-  apiKey: string;
-};
-```
 
 ```typescript
 import { ChatOpenAI } from 'openator';
@@ -150,9 +127,37 @@ import { ChatOpenAI } from 'openator';
 const llm = new ChatOpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
   model: 'gpt-4o',
-  temperature: 0,
-  maxRetries: 3,
-  maxConcurrency: 1,
+  temperature: 0, // optional
+  maxRetries: 3, // optional
+  maxConcurrency: 1, // optional
+});
+```
+
+### OllamaChat
+
+```typescript
+import { ChatOllama } from 'openator';
+
+const llm = new ChatOllama({
+  model: 'qwen2.5',
+  temperature: 0, // optional
+  maxRetries: 3, // optional
+  maxConcurrency: 1, // optional
+  baseUrl: 'http://localhost:11434', // optional
+});
+```
+
+### GoogleGenerativeAI
+
+```typescript
+import { ChatGoogleGenAI } from 'openator';
+
+const llm = new ChatGoogleGenAI({
+  model: 'gemini-2.0-flash',
+  apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY!,
+  temperature: 0, // optional
+  maxRetries: 3, // optional
+  maxConcurrency: 1, // optional
 });
 ```
 
