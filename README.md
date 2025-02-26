@@ -46,12 +46,16 @@ npm i openator
 Spin up your first agent with a task.
 
 ```typescript
-import { initOpenator } from 'openator';
+import { initOpenator, ChatOpenAI } from 'openator';
 
 const main = async () => {
+  const llm = new ChatOpenAI({
+    apiKey: process.env.OPENAI_API_KEY!,
+  });
+
   const openator = initOpenator({
+    llm,
     headless: false,
-    openAiApiKey: process.env.OPENAI_API_KEY,
   });
 
   await openator.start(
@@ -70,11 +74,15 @@ Optionally, you can add variables and secrets to your agent. These variables wil
 This is especially helpful if you want to pass more context to the agent, such as a username and a password.
 
 ```typescript
-import { initOpenator, Variable } from 'openator';
+import { initOpenator, Variable, ChatOpenAI } from 'openator';
+
+const llm = new ChatOpenAI({
+  apiKey: process.env.OPENAI_API_KEY!,
+});
 
 const openator = initOpenator({
   headless: false,
-  openAiApiKey: process.env.OPENAI_API_KEY,
+  llm,
   variables: [
     new Variable({
       name: 'username',
@@ -93,6 +101,59 @@ await openator.start(
   'https://my-website.com',
   'Authenticate with the username {{username}} and password {{password}} and then find the latest news on the website.',
 );
+```
+
+## LLM Configuration
+
+Optionally you can configure the LLM to use different models or configurations.
+
+Here is an example of how to customize the ChatOpenAI provider (more providers will be added soon).
+
+### OpenAIChat
+
+Here's the configuration type for the ChatOpenAI provider.
+
+```typescript
+export type ChatOpenAIConfig = {
+  /**
+   * The model to use.
+   * @default gpt-4o
+   */
+  model?: 'gpt-4o' | 'gpt-4o-mini' | 'gpt-4-turbo';
+  /**
+   * The temperature to use. We recommend setting this to 0 for consistency.
+   * @default 0
+   */
+  temperature?: number;
+  /**
+   * The maximum number of retries.
+   * This is usefull when you have a low quota such as Tier 1 or 2.
+   * @default 6
+   */
+  maxRetries?: number;
+  /**
+   * The maximum number of concurrent requests.
+   * Set it to a low value if you have a low quota such as Tier 1 or 2.
+   * @default 2
+   */
+  maxConcurrency?: number;
+  /**
+   * The OpenAI API key to use
+   */
+  apiKey: string;
+};
+```
+
+```typescript
+import { ChatOpenAI } from 'openator';
+
+const llm = new ChatOpenAI({
+  apiKey: process.env.OPENAI_API_KEY!,
+  modelName: 'gpt-4o',
+  temperature: 0,
+  maxRetries: 3,
+  maxConcurrency: 1,
+});
 ```
 
 ## Demo
